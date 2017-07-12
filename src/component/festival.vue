@@ -375,7 +375,7 @@
                             {{weight.weighted_combo}}
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
-
+                            {{weight.time_cnt}} s
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
                             {{ weight['update_time'].replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ")}}
