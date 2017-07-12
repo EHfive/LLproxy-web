@@ -11,7 +11,7 @@
             <mu-tabs :value="activeTab" @change="handleTabChange">
                 <mu-tab value="log" title="Medley Fes 记录" @click="handleLog()"/>
                 <mu-tab value="info" title="Live 详细" @click="handleInfo()"/>
-                <!--<mu-tab value="combo" title="Combo" @active="handleCombo()"/>-->
+                <mu-tab value="combo" title="权重 Combo" @click="handleCombo()"/>
                 <!--<mu-tab value="count" title="统计"/>-->
             </mu-tabs>
             <mu-content-block style="margin-left: 10px">
@@ -130,7 +130,7 @@
             </div>
             <div v-if="activeTab === 'log'">
                 <mu-card-text>
-                    点击歌曲名查看详细
+                    点击歌曲名查看详细 , 点击上方 Tab 刷新
                 </mu-card-text>
                 <mu-divider></mu-divider>
                 <div>
@@ -193,15 +193,15 @@
             <div v-if="activeTab === 'info' && feslive">
 
                 <mu-card-text>
-                    <mu-table :showCheckbox="false">
+                    <mu-table :selectable="false" :showCheckbox="false" :fixedHeader="false">
                         <mu-thead slot="header">
-                            <mu-th>记录号</mu-th>
-                            <mu-th>获得pt</mu-th>
-                            <mu-th>Live后持有pt</mu-th>
-                            <mu-th>Score</mu-th>
-                            <mu-th>Combo</mu-th>
-                            <mu-th>P/Great Good/B/M</mu-th>
-                            <mu-th>P率</mu-th>
+                            <mu-th class="wtcover">记录号</mu-th>
+                            <mu-th class="wtcover">获得pt</mu-th>
+                            <mu-th class="wtcover">Live后持有pt</mu-th>
+                            <mu-th class="wtscore">Score</mu-th>
+                            <mu-th class="wtcombo">Combo</mu-th>
+                            <mu-th class="wtnotes">P/Great Good/B/M</mu-th>
+                            <mu-th class="wtper">P率</mu-th>
                         </mu-thead>
                         <mu-tbody>
                             <mu-tr
@@ -295,7 +295,7 @@
                                     <mu-avatar v-if="val.type==1001" :size="60"
                                                :src="val.asset?raw_file(val.asset):getavatarsrc(val.item_id)"></mu-avatar>
                                     <template v-else-if="val.asset">
-                                        <img  :src="raw_file(val.asset)" alt="" class="img-responsive">
+                                        <img :src="raw_file(val.asset)" alt="" class="img-responsive">
                                     </template>
                                 </mu-badge>
                                 <span v-if="val.amount >1">x {{val.amount}}</span>
@@ -329,10 +329,103 @@
                 </mu-card-text>
             </div>
             <div v-if="activeTab === 'info' && !feslive" style="padding: 50px">
-                当前无记录号为 {{pair_id}} 的项 <br><br>
+                <span v-if="pair_id >0">当前无记录号为 {{pair_id}} 的项</span>
+                <span v-else>当前无记录</span>
+                <br><br>
                 点击 Live详细 或 <br>
                 继续点击 Newer / Forward 跳至最后一次live <br>
 
+            </div>
+            <div v-if="activeTab === 'combo' && weight">
+                <mu-card-text style="padding: 0 30px 20px 20px;text-align: right">
+                    显示最后 选曲信息, 换曲后点击上方 Tab 刷新
+                </mu-card-text>
+                <mu-table style="width: 100%">
+                    <mu-tr>
+                        <mu-td v-for="val,k in weight.song_set_ids" :key="k" style="text-align: center">
+                            <img :src="getlive_iconsrc(val)" class="img-responsive">
+                        </mu-td>
+                    </mu-tr>
+                    <mu-tr>
+                        <mu-td v-for="val,k in weight.song_set_ids" :key="k" style="text-align: center">
+                            {{getmapname(val, true)}}
+                        </mu-td>
+                    </mu-tr>
+                    <mu-tr>
+                        <mu-td v-for="val,k in weight.song_set_ids" :key="k" style="text-align: center">
+                            {{maps[val].s_rank_combo}} notes
+                        </mu-td>
+                    </mu-tr>
+
+                </mu-table>
+
+                <mu-card-text>
+                    <mu-flexbox style="padding: 0 20px">
+                        <mu-flexbox-item class="flex-demo">
+                            总 Combo数 :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{weight.notes}}
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item class="flex-demo">
+                            Combo权 权重 和 :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{weight.weighted_combo}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{ weight['update_time'].replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ")}}
+                        </mu-flexbox-item>
+                    </mu-flexbox>
+                    <mu-table :selectable="false" :showCheckbox="false" :fixedHeader="false" class="weight-table">
+                        <mu-thead slot="header">
+                            <tr class="weight-td">
+                                <mu-th class="wtcover text-c left-h"></mu-th>
+                                <mu-th class="wtcover text-c left-h">L1</mu-th>
+                                <mu-th class="wtcover text-c left-h">L2</mu-th>
+                                <mu-th class="wtcover text-c left-h">L3</mu-th>
+                                <mu-th class="wtcover text-c left-h">L4</mu-th>
+                                <mu-th class="wtcover text-c left-h">C</mu-th>
+                                <mu-th class="wtcover text-c left-h">R4</mu-th>
+                                <mu-th class="wtcover text-c left-h">R3</mu-th>
+                                <mu-th class="wtcover text-c left-h">R2</mu-th>
+                                <mu-th class="wtcover text-c left-h">R1</mu-th>
+
+                            </tr>
+                        </mu-thead>
+                        <mu-tbody>
+                            <mu-tr>
+                                <mu-td class="left-h text-c">权重</mu-td>
+                                <mu-td class="text-c" v-for="v,k in weight.notes_weight" :key="k">{{v || ''}}</mu-td>
+                            </mu-tr>
+                            <mu-tr>
+                                <mu-td class="left-h text-c">单键</mu-td>
+                                <mu-td class="text-c" v-for="v,k in weight.cnt.single" :key="k">{{v || ''}}</mu-td>
+                            </mu-tr>
+                            <mu-tr>
+                                <mu-td class="left-h text-c">长键</mu-td>
+                                <mu-td class="text-c" v-for="v,k in weight.cnt.strip" :key="k">{{v || ''}}</mu-td>
+                            </mu-tr>
+                            <mu-tr>
+                                <mu-td class="left-h text-c">星星</mu-td>
+                                <mu-td class="text-c" v-for="v,k in weight.cnt.star" :key="k">{{v || ''}}</mu-td>
+                            </mu-tr>
+                            <mu-tr>
+                                <mu-td class="left-h text-c">道具</mu-td>
+                                <mu-td class="text-c" v-for="v,k in weight.cnt.pt" :key="k">{{v || ''}}</mu-td>
+                            </mu-tr>
+
+                            <mu-tr>
+                                <mu-td class="left-h text-c">Combo权 权重</mu-td>
+                                <mu-td class="text-c" v-for="v,k in weight.combo_weight" :key="k">{{v || ''}}</mu-td>
+                            </mu-tr>
+                        </mu-tbody>
+                    </mu-table>
+                </mu-card-text>
             </div>
         </mu-card>
 
@@ -354,9 +447,11 @@
                 count: null,
                 error: null,
                 maps: null,
+                last_pair_id: 0,
                 pair_id: this.$route.query.pairid || -1,
                 sltevent: 0,
                 feslive: null,
+                weight: null,
                 activeTab: 'info',
 //                activeTab: this.$route.query.pairid && this.$route.query.eventid ? 'info' : 'log',
                 eventview: null,
@@ -393,6 +488,7 @@
             this.pair_id = -1
             this.fetchData(true)
             this.fetchLive()
+            this.fetchWeight()
             bus.$on('refresh', () => {
                 this.fetchLive()
                 this.fetchData(true)
@@ -415,7 +511,7 @@
                 this.fetchData(false)
             },
             handleNew(){
-                if (this.pair_id === -1) this.fetchLive();
+                if (this.pair_id === -1 || this.pair_id === this.last_pair_id) this.fetchLive();
                 else {
                     if (this.feslive) this.pair_id += 1
                     else this.pair_id = -1
@@ -439,6 +535,9 @@
             },
             handleLog(){
                 this.fetchData()
+            },
+            handleCombo(){
+                this.fetchWeight()
             },
             handleInfo () {
                 this.pair_id = -1;
@@ -527,6 +626,24 @@
                     .then(function (response) {
 
                         vm.feslive = response.data.result;
+                        if (vm.pair_id === -1) vm.last_pair_id = vm.feslive.pair_id
+                    })
+                    .catch(function (err) {
+                        vm.error = err.toString();
+                        console.log(err)
+
+                    })
+            },
+            fetchWeight(){
+                const vm = this;
+                axios.get('https://llsif.sokka.cn/api/llproxy/eventFestivalLast/', {
+                    params: {
+                        uid: vm.$route.params.id,
+                    }
+                })
+                    .then(function (response) {
+
+                        vm.weight = response.data.result;
                         console.log(response.data.result);
                     })
                     .catch(function (err) {
@@ -605,6 +722,15 @@
         white-space: normal;
     }
 
+    .weight-table {
+        .mu-td, .mu-th {
+            padding-left: 16px;
+            padding-right: 5px;
+            height: auto;
+            white-space: normal;
+        }
+    }
+
     .livetable {
         width: auto;
     }
@@ -651,6 +777,16 @@
 
     .cursor-pointer {
         cursor: pointer;
+    }
+
+    .left-h {
+        font-size: small;
+        font-weight: bold;
+    }
+
+    .text-c {
+        height: 62px;
+        text-align: center;
     }
 
     .img-responsive {

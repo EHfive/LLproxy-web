@@ -39,7 +39,7 @@
                                          class="skill" alt="">
 
                                     <img :key="index" v-for="sid,index in deck.units[n].unit_removable_skill_id"
-                                         :src="getskillsrc(sid)" :alt="skills[sid].name" class="skill"/>
+                                         :src="getskillsrc(sid)"  class="skill"/>
                                 </template>
                                 <template v-else>
                                     <br><img src="https://rawfile.loveliv.es/assets/image/ui/common/com_etc_68.png"

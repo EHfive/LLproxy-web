@@ -1,7 +1,7 @@
 <template>
     <div>
         <mu-card style="overflow: hidden">
-            <mu-card-header title="大众脸的同学" subTitle="eh5 /cimoc">
+            <mu-card-header title="大众脸的同学" subTitle="eh5, cimoc">
                 <mu-avatar src="https://gss0.baidu.com/7Ls0a8Sm2Q5IlBGlnYG/sys/portraitl/item/f0cb27af?t=1494442107"
                            slot="avatar"/>
             </mu-card-header>
@@ -44,7 +44,7 @@
             </mu-card-text>
             <mu-card-title title="反汉化补丁"/>
             <mu-card-text>
-                LLproxy用户  其他-各种设置-下载-演唱会歌曲(全部) 即可获取补丁 <br>
+                LLproxy用户 在SIF中 其他-各种设置-下载-演唱会歌曲(全部) 获取补丁 <br>
                 <br>
             </mu-card-text>
         </mu-card>
