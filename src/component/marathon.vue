@@ -275,7 +275,7 @@
     }
 
     .live-fc {
-        background-color: #f3e5f5;
+        background-color: rgba(253, 239, 255, 0.65);
     }
 
     .live-event {

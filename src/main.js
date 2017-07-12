@@ -31,6 +31,7 @@ import Deck from './component/deck.vue'
 import DeckInfo from './component/deckInfo.vue'
 import EffortBox from './component/effortbox.vue'
 import Challenge from  './component/challenge.vue'
+import Festival from './component/festival.vue'
 const TSwitch = resolve => require(['./component/themeswitch.vue'], resolve)
 const router = new VueRouter({
     mode: 'history',
@@ -95,6 +96,10 @@ const router = new VueRouter({
                 {
                     path: ':id/marathon',
                     component: Marathon
+                },
+                {
+                    path: ':id/festival',
+                    component: Festival
                 },
                 {
                     path: ':id/challenge',

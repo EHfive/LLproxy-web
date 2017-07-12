@@ -11,6 +11,7 @@
                 <mu-menu-item title="开箱记录" leftIcon="card_giftcard" @click="goto('/user/'+getID()+'/effortbox')"></mu-menu-item>
                 <mu-menu-item title="活动记录"  rightIcon="keyboard_arrow_right" inset>
                     <mu-menu-item title="传统活动/Marathon" @click="goto('/user/'+getID()+'/marathon')"></mu-menu-item>
+                    <mu-menu-item title="Medley Fes" @click="goto('/user/'+getID()+'/festival')"></mu-menu-item>
                     <mu-menu-item title="Challenge Fes" @click="goto('/user/'+getID()+'/challenge')"></mu-menu-item>
                     <mu-menu-item title="Score Match"></mu-menu-item>
                 </mu-menu-item>

@@ -192,7 +192,7 @@
                 loadingapi: true,
                 lives: null,
                 page: 1,
-                limit: 20,
+                limit: 10,
                 count: null,
                 error: null,
                 maps: null,
@@ -385,7 +385,7 @@
     }
 
     .live-fc {
-        background-color: #f3e5f5;
+        background-color: rgba(253, 239, 255, 0.65);
     }
 
     .live-event {
