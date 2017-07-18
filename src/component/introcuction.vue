@@ -27,7 +27,7 @@
                 <br> <span class="mt8">关闭游戏后台并重新进入游戏</span> <br>
 
                 <span class="mt8">如果DNS设置正确就可以在右上的搜索框搜到自己了</span><br><br>
-                <span class="mt8">仍然不行请试试 <a target="_blank" href="http://cos.sokka.cn//apk/DNS_Changer.apk">DNS Changer(安卓)</a>, <a target="_blank" href="https://itunes.apple.com/us/app/dns-override/id1060830093?mt=8">DNS Override(IOS) 功能收费</a></span>
+                <span class="mt8">仍然不行请试试 <a target="_blank" href="http://cos.sokka.cn//apk/DNS_Changer.apk">DNS Changer(安卓)</a>, <a target="_blank" href="https://itunes.apple.com/cn/app/dns-override/id1060830093?mt=8">DNS Override(IOS) 功能收费</a></span>
                 <br><span class="mt8">如果有条件改hosts 请加群咨询 IP-主机名</span>
                 <br>
                 <!--<span><a class="link" href="https://llsif.sokka.cn/llproxy/ca.crt">预备的CA证书 目前版本无需</a></span>-->

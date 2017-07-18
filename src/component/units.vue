@@ -19,9 +19,15 @@
                 <mu-raised-button style="margin-right: 15px" icon="import_export" labelPosition="before" secondary
                                   label="JSON文本"
                                   @click="dialog=true"></mu-raised-button>
-                <mu-raised-button style="margin-right: 15px" icon="import_export" labelPosition="before" secondary
-                                  label="导出至LLSIF - AutoTeamBuilder"
-                                  @click="export_team_builder()"></mu-raised-button>
+
+
+                <a :href="url">
+                    <mu-raised-button style="margin-right: 15px" icon="import_export" labelPosition="before" secondary
+                                      label="导出至LLSIF - AutoTeamBuilder"
+                    ></mu-raised-button>
+                </a>
+
+
                 <br>
 
                 <!--<span style="margin-top: 18px">JSON信息 可用于 <a target="_blank" href="https://llsifteambuilder.herokuapp.com/build_team/">LLSIF-AutoTeamBuilder</a></span>-->
@@ -117,6 +123,7 @@
                 export_code: null,
                 dialog: false,
                 toast: false,
+                url:"https://llsifteambuilder.herokuapp.com/build_team/LLproxy_user_json?uid=" + this.$route.params.id
 
             }
         },
@@ -127,6 +134,16 @@
             bus.$on('refresh', () => {
 
                 this.fetchData()
+
+            })
+            bus.$on('jump', () => {
+                if (navigator.userAgent.match(/Apple/ig) || navigator.userAgent.match(/Safari/ig)) {
+                    location = "https://llsifteambuilder.herokuapp.com/build_team/LLproxy_user_json?uid=" + this.$route.params.id
+                } else {
+                    const url = "https://llsifteambuilder.herokuapp.com/build_team/"
+                    location = url
+                }
+
 
             })
         },
@@ -212,12 +229,13 @@
                         const code = response2.data.result.JSONString;
 
                         window.frames["frame1"].postMessage(code, '*')
-                        vm.$refs.TBlink.click()
+                        bus.$emit('jump')
 
                     })
                     .catch(function (err2) {
                         console.log(err2)
                     })
+                return true
 
             },
             fetchCode(){
@@ -226,7 +244,7 @@
                     return
                 }
                 axios.get('https://llsif.sokka.cn/api/llproxy/unitsExportJSON/', {
-                    params: {uid: vm.$route.params.id}
+                    params: {uid: vm.$route.params.id,full:true}
                 })
                     .then(function (response2) {
                         const code = response2.data.result.JSONString;
