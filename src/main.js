@@ -34,7 +34,7 @@ import Challenge from  './component/challenge.vue'
 import Festival from './component/festival.vue'
 const TSwitch = resolve => require(['./component/themeswitch.vue'], resolve)
 const router = new VueRouter({
-    mode: 'history',
+    // mode: 'history',
     routes: [
         {
             path: '/', redirect: '/user'

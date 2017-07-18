@@ -39,7 +39,7 @@
                                          class="skill" alt="">
 
                                     <img :key="index" v-for="sid,index in deck.units[n].unit_removable_skill_id"
-                                         :src="getskillsrc(sid)"  class="skill"/>
+                                         :src="getskillsrc(sid)" class="skill"/>
                                 </template>
                                 <template v-else>
                                     <br><img src="https://rawfile.loveliv.es/assets/image/ui/common/com_etc_68.png"
@@ -66,16 +66,25 @@
                 <mu-list-item @click="exportdeck()">
                     LoveLive! 查卡器 CardViewer
                 </mu-list-item>
-
+                <mu-list-item @click="exportsifstatus()">
+                    SIFStatus
+                </mu-list-item>
 
             </mu-list>
         </mu-bottom-sheet>
         <mu-dialog :open="dialog" title="查卡器导入码" @close="close">
             <mu-text-field v-model="export_code" fullWidth></mu-text-field>
             <br/>
-            <mu-flat-button v-if="export_code!='获取失败'" slot="actions"  v-clipboard:copy="export_code" v-clipboard:success="onCopy"
-                            v-clipboard:error="onError" primary  label="复制"></mu-flat-button>
-            <mu-flat-button slot="actions" v-else primary  label="关闭" @click="close()"></mu-flat-button>
+            <mu-flat-button v-if="export_code!='获取失败'" slot="actions" v-clipboard:copy="export_code"
+                            v-clipboard:success="onCopy"
+                            v-clipboard:error="onError" primary label="复制"></mu-flat-button>
+            <mu-flat-button slot="actions" v-else primary label="关闭" @click="close()"></mu-flat-button>
+        </mu-dialog>
+        <mu-dialog :open="statusdialog" title="SIFStatus" @close="close">
+            <mu-text-field v-model="export_status" fullWidth multiLine :rowsMax="10"></mu-text-field>
+            <br/>
+            <mu-flat-button slot="actions" v-clipboard:copy="export_status" v-clipboard:success="onCopy"
+                            v-clipboard:error="onError" primary label="复制"></mu-flat-button>
         </mu-dialog>
         <mu-toast v-if="toast" :message="toast" @close="hideToast"/>
     </div>
@@ -121,6 +130,8 @@
                 ],
                 export_deck: null,
                 export_code: null,
+                export_status: null,
+                statusdialog: false,
                 dialog: false,
                 toast: false,
                 msg: null
@@ -145,13 +156,17 @@
         methods: {
             onCopy: function (e) {
                 this.toast = "复制成功"
-                this.toastTimer = setTimeout(() => { this.toast = false }, 1000)
+                this.toastTimer = setTimeout(() => {
+                    this.toast = false
+                }, 1000)
                 this.close()
-                this.export_code=null
+                this.export_code = null
             },
             onError: function (e) {
                 this.toast = "复制失败,请手动复制"
-                this.toastTimer = setTimeout(() => { this.toast = false }, 1000)
+                this.toastTimer = setTimeout(() => {
+                    this.toast = false
+                }, 1000)
             },
             hideToast () {
                 this.toast = false
@@ -195,6 +210,10 @@
                     })
                 this.bottomSheet = true
             },
+            exportsifstatus(){
+                this.export_status = this.export_deck.sifstatusString
+                this.statusdialog = true
+            },
             exportdeck(llhelper = false){
                 if (llhelper) {
                     const llhelper = this.export_deck.llhelperString;
@@ -220,6 +239,7 @@
             },
             close () {
                 this.dialog = false
+                this.statusdialog = false
             }
 
         }

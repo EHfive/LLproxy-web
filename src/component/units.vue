@@ -16,10 +16,15 @@
                     <mu-raised-button icon="import_export" labelPosition="before" secondary
                                       label="导出至LL组卡器"></mu-raised-button>
                 </a>
-                <mu-raised-button style="margin-right: 15px" icon="import_export" labelPosition="before" secondary label="JSON文本"
+                <mu-raised-button style="margin-right: 15px" icon="import_export" labelPosition="before" secondary
+                                  label="JSON文本"
                                   @click="dialog=true"></mu-raised-button>
+                <mu-raised-button style="margin-right: 15px" icon="import_export" labelPosition="before" secondary
+                                  label="导出至LLSIF - AutoTeamBuilder"
+                                  @click="export_team_builder()"></mu-raised-button>
                 <br>
-                <span style="margin-top: 18px">JSON信息 可用于 <a target="_blank" href="https://llsifteambuilder.herokuapp.com/build_team/">LLSIF-AutoTeamBuilder</a></span>
+
+                <!--<span style="margin-top: 18px">JSON信息 可用于 <a target="_blank" href="https://llsifteambuilder.herokuapp.com/build_team/">LLSIF-AutoTeamBuilder</a></span>-->
             </mu-card-text>
             <mu-divider></mu-divider>
             <div>
@@ -81,14 +86,17 @@
             </mu-card-actions>
         </mu-card>
         <mu-dialog :open="dialog" title="队伍 社员 学园偶像技能" @close="close">
-            <mu-text-field v-model="export_code" fullWidth multiLine rowsMax="15"></mu-text-field>
+            <mu-text-field v-model="export_code" fullWidth multiLine :rowsMax="15"></mu-text-field>
             <br/>
-            <mu-flat-button v-if="export_code!='获取失败'" slot="actions" v-clipboard:copy="export_code"
+            <mu-flat-button v-if="export_code!='null'" slot="actions" v-clipboard:copy="export_code"
                             v-clipboard:success="onCopy"
                             v-clipboard:error="onError" primary label="复制"></mu-flat-button>
             <mu-flat-button slot="actions" v-else primary label="关闭" @click="close()"></mu-flat-button>
         </mu-dialog>
         <mu-toast v-if="toast" :message="toast" @close="hideToast"/>
+        <iframe hidden id="exportframe" name="frame1"
+                src="https://llsifteambuilder.herokuapp.com/build_team/receive_user_json" frameborder="0"></iframe>
+        <a ref="TBlink" target="_blank" href="https://llsifteambuilder.herokuapp.com/build_team/"></a>
     </div>
 </template>
 
@@ -194,6 +202,24 @@
             downf(){
                 download("https://llsif.sokka.cn/other/unitsExportUTF16/?uid=" + this.$route.params.id)
             },
+            export_team_builder(){
+                const vm = this
+                const frm = document.getElementById("exportframe")
+                axios.get('https://llsif.sokka.cn/api/llproxy/unitsExportJSON/', {
+                    params: {uid: vm.$route.params.id}
+                })
+                    .then(function (response2) {
+                        const code = response2.data.result.JSONString;
+
+                        window.frames["frame1"].postMessage(code, '*')
+                        vm.$refs.TBlink.click()
+
+                    })
+                    .catch(function (err2) {
+                        console.log(err2)
+                    })
+
+            },
             fetchCode(){
                 const vm = this
                 if (!vm.dialog) {
@@ -204,7 +230,7 @@
                 })
                     .then(function (response2) {
                         const code = response2.data.result.JSONString;
-                        vm.export_code = code || '获取失败'
+                        vm.export_code = code || 'null'
                     })
                     .catch(function (err2) {
                         console.log(err2)
