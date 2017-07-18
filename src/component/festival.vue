@@ -12,7 +12,7 @@
                 <mu-tab value="log" title="Medley Fes 记录" @click="handleLog()"/>
                 <mu-tab value="info" title="Live 详细" @click="handleInfo()"/>
                 <mu-tab value="combo" title="权重 Combo" @click="handleCombo()"/>
-                <!--<mu-tab value="count" title="统计"/>-->
+                <mu-tab value="count" title="统计" @click="handleCount()"/>
             </mu-tabs>
             <mu-content-block style="margin-left: 10px">
 
@@ -23,111 +23,6 @@
                 </mu-select-field>
                 <!--<mu-switch  label="显示非活动曲" v-model="shownormal" labelLeft=""></mu-switch>-->
             </mu-content-block>
-            <div v-if="activeTab === 'count' && eventview">
-                <mu-card-text>
-                    <mu-flexbox>
-                        <mu-flexbox-item class="flex-demo">
-                            获得 LP :
-                        </mu-flexbox-item>
-                        <mu-flexbox-item class="flex-demo">
-                            {{eventview.total_lp_gain}}
-                        </mu-flexbox-item>
-
-                        <mu-flexbox-item class="flex-demo">
-                            获得 招募券 :
-                        </mu-flexbox-item>
-                        <mu-flexbox-item class="flex-demo">
-                            {{eventview.total_ticket_gain}}
-                        </mu-flexbox-item>
-                        <mu-flexbox-item class="flex-demo">
-
-                        </mu-flexbox-item>
-                        <mu-flexbox-item class="flex-demo">
-
-                        </mu-flexbox-item>
-                    </mu-flexbox>
-                    <br>
-                    <mu-flexbox>
-                        <mu-flexbox-item class="flex-demo">
-                            <!--<img src="" alt="金箱">-->
-                            金箱 :
-                        </mu-flexbox-item>
-                        <mu-flexbox-item class="flex-demo">
-                            {{eventview.rarity_3_cnt}}
-                        </mu-flexbox-item>
-
-                        <mu-flexbox-item>
-                            <!--<img src="" alt="银箱">-->
-                            银箱 :
-                        </mu-flexbox-item>
-
-                        <mu-flexbox-item>
-                            {{eventview.rarity_2_cnt}}
-                        </mu-flexbox-item>
-                        <mu-flexbox-item>
-                            <!--<img src="" alt="铜箱">-->
-                            铜箱 :
-                        </mu-flexbox-item>
-
-                        <mu-flexbox-item>
-                            {{eventview.rarity_1_cnt}}
-                        </mu-flexbox-item>
-                    </mu-flexbox>
-                    <br>
-                    <mu-flexbox>
-                        <mu-flexbox-item class="flex-demo">
-                            <!--<img src="" alt="最高分">-->
-                            High Score :
-                        </mu-flexbox-item>
-                        <mu-flexbox-item class="flex-demo">
-                            {{eventview.high_score}}
-                        </mu-flexbox-item>
-
-                        <mu-flexbox-item>
-                            <!--<img src="" alt="活动pt">-->
-                            活动pt :
-                        </mu-flexbox-item>
-
-                        <mu-flexbox-item>
-                            {{eventview.total_event_point}}
-                        </mu-flexbox-item>
-                        <mu-flexbox-item>
-                            <!--<img src="" alt="Round">-->
-                            Round :
-                        </mu-flexbox-item>
-
-                        <mu-flexbox-item>
-                            {{eventview.total_rounds}}
-                        </mu-flexbox-item>
-                    </mu-flexbox>
-                </mu-card-text>
-                <mu-card-title title="Combo pt加成系数" subTitle="加权平均计算" style=""></mu-card-title>
-                <mu-card-text>
-                    <mu-flexbox>
-                        <mu-flexbox-item class="flex-demo">
-                            加权平均 总 Combo加成 (超级) :
-                        </mu-flexbox-item>
-                        <mu-flexbox-item class="flex-demo">
-                            x <span style="font-size: medium">{{eventview.combo_multiple}}</span>
-                        </mu-flexbox-item>
-                        <mu-flexbox-item class="flex-demo">
-                        </mu-flexbox-item>
-
-                    </mu-flexbox>
-                    <mu-table>
-                        <mu-thead slot="header">
-
-                            <mu-th style="text-align: left" v-for="n in 1,5" :key="n">Round. {{n}}</mu-th>
-                        </mu-thead>
-                        <mu-tbody>
-                            <mu-td style="text-align: left" v-for="v,k in eventview.combo_multiple_r" :key="k">x <span
-                                    style="font-size: small">{{v}}</span></mu-td>
-                        </mu-tbody>
-                    </mu-table>
-                </mu-card-text>
-
-                <br>
-            </div>
             <div v-if="activeTab === 'log'">
                 <mu-card-text>
                     点击歌曲名查看详细 , 点击上方 Tab 刷新
@@ -427,6 +322,100 @@
                     </mu-table>
                 </mu-card-text>
             </div>
+            <div v-if="activeTab === 'count' && eventview">
+                <mu-card-text>
+                    <mu-flexbox>
+                        <mu-flexbox-item class="flex-demo">
+                            BUFF消耗 G :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.total_coin_cost}}
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item class="flex-demo">
+                            获得 招募券 :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.total_ticket_gain}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            获得 技能exp :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.total_exp_gain}}
+                        </mu-flexbox-item>
+                    </mu-flexbox>
+                    <br>
+                    <mu-flexbox>
+                        <mu-flexbox-item class="flex-demo">
+                            <!--<img src="" alt="金箱">-->
+                            金箱 :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.rarity_3_cnt}}
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item>
+                            <!--<img src="" alt="银箱">-->
+                            银箱 :
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item>
+                            {{eventview.rarity_2_cnt}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item>
+                            <!--<img src="" alt="铜箱">-->
+                            铜箱 :
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item>
+                            {{eventview.rarity_1_cnt}}
+                        </mu-flexbox-item>
+                    </mu-flexbox>
+                    <br>
+                    <mu-flexbox>
+                        <mu-flexbox-item class="flex-demo">
+                            <!--<img src="" alt="最高分">-->
+                            High Score :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.high_score}}
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item>
+                            <!--<img src="" alt="活动pt">-->
+                            活动pt :
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item>
+                            {{eventview.total_event_point}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item>
+                            <!--<img src="" alt="Round">-->
+                            Round :
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item>
+                            {{eventview.total_rounds}}
+                        </mu-flexbox-item>
+                    </mu-flexbox>
+                </mu-card-text>
+                <mu-card-text>
+                    <mu-flexbox>
+                        <mu-flexbox-item class="flex-demo">
+                            平均 Combo加成:
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            x <span style="font-size: medium">{{eventview.combo_multiple}}</span>
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                        </mu-flexbox-item>
+
+                    </mu-flexbox>
+                </mu-card-text>
+
+                <br>
+            </div>
         </mu-card>
 
     </div>
@@ -534,10 +523,13 @@
 
             },
             handleLog(){
-                this.fetchData()
+                this.fetchData(reload=false)
             },
             handleCombo(){
                 this.fetchWeight()
+            },
+            handleCount(){
+
             },
             handleInfo () {
                 this.pair_id = -1;
@@ -594,8 +586,8 @@
                         console.log(err)
 
                     })
-                /*
-                 axios.get('https://llsif.sokka.cn/api/llproxy/eventChallengeView/', {
+
+                 axios.get('https://llsif.sokka.cn/api/llproxy/eventFestivalView/', {
                  params: {
                  uid: vm.$route.params.id,
                  eventid: vm.$route.query.eventid || vm.sltevent || null,
@@ -611,7 +603,7 @@
                  vm.error = err.toString();
                  console.log(err)
 
-                 })*/
+                 })
 
             },
             fetchLive(){

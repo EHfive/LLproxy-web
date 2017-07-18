@@ -16,8 +16,10 @@
                     <mu-raised-button icon="import_export" labelPosition="before" secondary
                                       label="导出至LL组卡器"></mu-raised-button>
                 </a>
-                <mu-raised-button icon="import_export" labelPosition="before" secondary label="JSON文本"
+                <mu-raised-button style="margin-right: 15px" icon="import_export" labelPosition="before" secondary label="JSON文本"
                                   @click="dialog=true"></mu-raised-button>
+                <br>
+                <span style="margin-top: 18px">JSON信息 可用于 <a target="_blank" href="https://llsifteambuilder.herokuapp.com/build_team/">LLSIF-AutoTeamBuilder</a></span>
             </mu-card-text>
             <mu-divider></mu-divider>
             <div>
