@@ -67,7 +67,7 @@
                     LoveLive! 查卡器 CardViewer
                 </mu-list-item>
                 <mu-list-item @click="exportsifstatus()">
-                    SIFStatus
+                    SIFStats
                 </mu-list-item>
 
             </mu-list>
@@ -80,7 +80,7 @@
                             v-clipboard:error="onError" primary label="复制"></mu-flat-button>
             <mu-flat-button slot="actions" v-else primary label="关闭" @click="close()"></mu-flat-button>
         </mu-dialog>
-        <mu-dialog :open="statusdialog" title="SIFStatus" @close="close">
+        <mu-dialog :open="statusdialog" title="SIFStats" @close="close">
             <mu-text-field v-model="export_status" fullWidth multiLine :rowsMax="10"></mu-text-field>
             <br/>
             <mu-flat-button slot="actions" v-clipboard:copy="export_status" v-clipboard:success="onCopy"
