@@ -8,14 +8,15 @@
             <!--<mu-avatar src="/images/uicon.jpg" slot="avatar"/>-->
             <!--</mu-card-header>-->
 
-            <mu-card-title title="Live" subTitle="被收录的live" style=""></mu-card-title>
+            <mu-card-title title="活动 Live" subTitle="被收录的live" style=""></mu-card-title>
             <mu-content-block style="margin-left: 10px">
 
                 <mu-select-field v-model="sltevent" label="选择活动" style="margin-right: 15px">
-                    <mu-menu-item v-for="vals,index in eventlist" :key="index" :value="vals.event_id" :title="vals.title+' /'+vals.event_id"
-                                  ></mu-menu-item>
+                    <mu-menu-item v-for="vals,index in eventlist" :key="index" :value="vals.event_id"
+                                  :title="vals.title+' /'+vals.event_id"
+                    ></mu-menu-item>
                 </mu-select-field>
-                <mu-switch  label="显示非活动曲" v-model="shownormal" labelLeft=""></mu-switch>
+                <mu-switch label="显示非活动曲" v-model="shownormal" labelLeft=""></mu-switch>
             </mu-content-block>
             <div>
                 <mu-table class="livetable" :selectable="false" :showCheckbox="false" :fixedHeader="false"
@@ -31,16 +32,17 @@
                     <mu-tbody>
                         <mu-tr v-for="live,index in lives" :key="index"
                                :class="(live['is_event_song']&&shownormal?'live-event ':'') +(live['max_combo']==maps[live['live_setting_id']].s_rank_combo?'live-fc':'')">
-                            <mu-td v-if="live['is_event_song']" >
+                            <mu-td v-if="live['is_event_song']">
                                 {{live['event_point']}}(+0)<br>{{live['total_event_point']}}(+{{live['added_event_point']}})
                             </mu-td>
-                            <mu-td v-else >
+                            <mu-td v-else>
                                 {{live['event_point']}}(+{{live['added_event_point']}})<br>{{live['total_event_point']}}(+{{live['added_event_point']}})
                             </mu-td>
 
                             <mu-td class="cursor-pointer" @click="goto_live(live['event_id'])">
                                 {{ getmapname(live['live_setting_id'], live['is_random']) || ("difficulty-id: " + live['live_difficulty_id'])}}
-                                <br><span style="font-size: 85%">{{ live['update_time'].replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ")}}</span>
+                                <br><span
+                                    style="font-size: 85%">{{ live['update_time'].replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ")}}</span>
                             </mu-td>
 
                             <mu-td>{{live['score']}}</mu-td>
@@ -125,6 +127,31 @@
                         "sr_players": "22634",
                         "type": "1"
                     },
+                    {
+                        "event_id": "83",
+                        "title": "\u50cf\u68a6\u4e00\u822c\u7684One night",
+                        "begin": {
+                            "time": "2017-07-25 15:00:00",
+                            "timestamp": 1500966000
+                        },
+                        "end": {
+                            "time": "2017-08-04 14:00:00",
+                            "timestamp": 1501826400
+                        },
+                        "tiers": {
+                            "tier1": {
+                                "rank": "2300",
+                                "pt": "0"
+                            },
+                            "tier2": {
+                                "rank": "11500",
+                                "pt": "0"
+                            }
+                        },
+                        "players": "0",
+                        "sr_players": "0",
+                        "type": "1"
+                    }
                 ]
 
             }
