@@ -26,12 +26,12 @@
                     </mu-thead>
                     <mu-tbody>
                         <mu-tr v-for="log,index in logs" :key="index">
-                            <mu-td class="wtcardpool" style="text-align: center;">
+                            <mu-td class="wtcardpool ht70" style="text-align: center;">
                                 <span style="font-size: 125%">{{('' + log.capacity).slice(0, -4) + ' W'}}</span>
                                 <br><span
                                     style="font-size: 85%">{{ log['update_time'].replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ").slice(0, -3)}}</span>
                             </mu-td>
-                            <mu-td v-for="n in 3" :key="n-1">
+                            <mu-td class="ht70" v-for="n in 3" :key="n-1">
                                 <template v-if="log.rewards[n-1]">
                                     <img :src="getavatarsrc(log.rewards[n-1].item_id)"
                                          v-if="log.rewards[n-1].type==1001" style="max-width: 40px;">
@@ -61,6 +61,7 @@
 <script>
     import axios from 'axios'
     import bus from '../bus.js'
+    import util from '../util.js'
 
     export default {
         data(){
@@ -109,7 +110,7 @@
                 reload && (this.loadingapi = true);
                 // replace getPost with your data fetching util / API wrapper
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/effortBoxLog/', {
+                axios.get(util.api_server + 'llproxy/effortBoxLog/', {
                     params: {
                         uid: vm.$route.params.id,
                         limit: vm.limit,
@@ -134,10 +135,10 @@
             },
             getavatarsrc(unit_id) {
                 if (unit_id > 0) {
-                    const urls = "https://db.loveliv.es/png/icon_from_unit_id/" + unit_id + "/0.png";
+                    const urls = util.icon_root + unit_id + "/0.png";
                     return urls
                 } else {
-                    return "http://rawfile.loveliv.es/assets/image/ui/common/com_win_22.png"
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             },
 
@@ -154,7 +155,7 @@
     .mu-td, .mu-th {
         padding-left: 16px;
         padding-right: 5px;
-
+        height: 70px !important;
         white-space: normal;
     }
 
@@ -172,6 +173,10 @@
         }
 
     }
+
+        .ht70 {
+            height: 60px ;
+        }
 
     .tr-notbypt {
         height: 65px;

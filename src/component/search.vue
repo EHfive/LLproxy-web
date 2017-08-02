@@ -57,11 +57,12 @@
 <script>
     import axios from 'axios'
     import  bus  from '../bus.js'
+    import util from '../util.js'
 
     export default {
         data(){
             return {
-                loadingapi: false,
+                loading: true,
                 users: null,
                 page: 1,
                 limit: 20,
@@ -97,17 +98,17 @@
             },
             fetchData (reload=true) {
                 this.error = this.users = null;
-                reload && (this.loadingapi = true);
+                reload && (this.loading = true);
                 // replace getPost with your data fetching util / API wrapper
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/userSearch/', {
+                axios.get(util.api_server + 'llproxy/userSearch/', {
                     params: {
                         keyword: vm.$route.query.keyword ? vm.$route.query.keyword : "***",
                         limit: 10
                     }
                 })
                     .then(function (response) {
-                        reload && (vm.loadingapi = false);
+                        reload && (vm.loading = false);
                         vm.users = response.data['result'];
                     })
                     .catch(function (err) {
@@ -119,10 +120,10 @@
             },
             getavatarsrc(unit) {
                 if ( unit&& unit['unit_id']) {
-                    const urls = "https://db.loveliv.es/png/icon_from_unit_id/" + unit['unit_id'] + "/" + (unit['display_rank'] - 1) + ".png";
+                    const urls = util.icon_root + unit['unit_id'] + "/" + (unit['display_rank'] - 1) + ".png";
                     return urls
                 } else {
-                    return "http://rawfile.loveliv.es/assets/image/ui/common/com_win_22.png"
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             },
 
@@ -151,7 +152,7 @@
     .mu-td, .mu-th {
         padding-left: 16px;
         padding-right: 5px;
-
+        height: 70px;
         white-space: normal;
     }
     .livetable {
@@ -164,5 +165,6 @@
 
     .cursor-pointer {
         cursor: pointer;
+        height: 70px;
     }
 </style>

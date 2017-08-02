@@ -36,20 +36,20 @@
                     </mu-thead>
                     <mu-tbody>
                         <mu-tr v-for="log,index in logs" :key="index" :class="bypt?'':'tr-notbypt'">
-                            <mu-td class="wtcardpool">
+                            <mu-td class="wtcardpool ht60">
                                 <span style="font-size: 115%;">{{log.name}}</span>
                                 <br><span style="font-size: 85%">{{ log['update_time'].replace(new Date().getFullYear()+'-',"").replace('201',"1").replace("T"," ").slice(0, -3)}}</span>
                             </mu-td>
 
                                 <template v-if="!bypt">
-                                    <mu-td>{{log['ur_cnt']}}</mu-td>
-                                    <mu-td>{{log['ssr_cnt']}}</mu-td>
-                                    <mu-td>{{log['sr_cnt']}}</mu-td>
+                                    <mu-td class="ht60">{{log['ur_cnt']}}</mu-td>
+                                    <mu-td class="ht60">{{log['ssr_cnt']}}</mu-td>
+                                    <mu-td class="ht60">{{log['sr_cnt']}}</mu-td>
                                 </template>
 
-                            <mu-td>{{log['r_cnt']}}</mu-td>
-                            <mu-td v-if="bypt">{{log['n_cnt']}}</mu-td>
-                            <mu-td :class="bypt?'wtavatar-bypt':'wtavatar'">
+                            <mu-td class="ht60">{{log['r_cnt']}}</mu-td>
+                            <mu-td class="ht60" v-if="bypt">{{log['n_cnt']}}</mu-td>
+                            <mu-td :class="bypt?'wtavatar-bypt':'wtavatar'+' ht60'">
                                 <mu-avatar v-for="unitid,indexu in log['result_unit_ids']" :key="indexu"
                                            :src="getavatarsrc(unitid)"
                                            v-if="bypt?(!notshown || (log['result_rarity_ids'][indexu] != 1)):(showr || (log['result_rarity_ids'][indexu] != 2))"></mu-avatar>
@@ -71,6 +71,7 @@
 <script>
     import axios from 'axios'
     import bus from '../bus.js'
+    import util from '../util.js'
 
     export default {
         data(){
@@ -118,7 +119,7 @@
                 reload && (this.loadingapi = true);
                 // replace getPost with your data fetching util / API wrapper
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/secretBoxLog/', {
+                axios.get(util.api_server + 'llproxy/secretBoxLog/', {
                     params: {
                         uid: vm.$route.params.id,
                         limit: vm.limit,
@@ -142,10 +143,10 @@
             },
             getavatarsrc(unit_id) {
                 if (unit_id > 0) {
-                    const urls = "https://db.loveliv.es/png/icon_from_unit_id/" + unit_id + "/0.png";
+                    const urls = util.icon_root + unit_id + "/0.png";
                     return urls
                 } else {
-                    return "http://rawfile.loveliv.es/assets/image/ui/common/com_win_22.png"
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             },
 
@@ -162,7 +163,7 @@
     .mu-td, .mu-th {
         padding-left: 16px;
         padding-right: 5px;
-
+        height: 60px;
         white-space: normal;
     }
 
@@ -186,7 +187,9 @@
     .wtcardpool {
         width: 20%;
     }
-
+    .ht60 {
+        height: 60px ;
+    }
     .wtavatar {
         width: 40%;
         text-align: left;

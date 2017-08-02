@@ -5,6 +5,8 @@
     </div>
 </template>
 <script>
+    import util from '../util.js'
+
     export default {
         date (){
             return {

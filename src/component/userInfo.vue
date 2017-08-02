@@ -143,6 +143,7 @@
 <script>
     import axios from 'axios'
     import bus from '../bus.js'
+    import util from '../util.js'
 
     export default {
         data(){
@@ -197,7 +198,7 @@
                 this.loadingapi = true;
                 // replace getPost with your data fetching util / API wrapper
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/userInfo/', {
+                axios.get(util.api_server + 'llproxy/userInfo/', {
                     params: {
                         uid: vm.$route.params.id,
                     }
@@ -218,10 +219,10 @@
             },
             getavatarsrc() {
                 if (this.userinfo && this.userinfo['navi_unit_info'] && this.userinfo['navi_unit_info']['unit_id']) {
-                    const urls = "https://db.loveliv.es/png/icon_from_unit_id/" + this.userinfo['navi_unit_info']['unit_id'] + "/" + (this.userinfo['navi_unit_info']['display_rank'] - 1) + ".png";
+                    const urls = util.icon_root + this.userinfo['navi_unit_info']['unit_id'] + "/" + (this.userinfo['navi_unit_info']['display_rank'] - 1) + ".png";
                     return urls
                 } else {
-                    return "http://rawfile.loveliv.es/assets/image/ui/common/com_win_22.png"
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             },
             getcardpicsrc() {

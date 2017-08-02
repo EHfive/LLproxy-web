@@ -36,6 +36,8 @@
     import debounce from 'lodash/debounce'
     import bus from '../bus.js'
     import Cookies from 'js-cookie'
+    import util from '../util.js'
+
     export default {
         data () {
             return {
@@ -73,14 +75,14 @@
                     this.user_list = {};
                 }
                 this.user_list['' + userinfo.uid] = userinfo;
-                this.savedlist = this.user_list
+                this.savedlist = this.user_list;
                 bus.$emit('set', this.user_list);
                 Cookies.set('userlist', this.user_list, {expires: 365})
-            })
+            });
             bus.$on('update', (userinfo) => {
                 if (this.savedlist && this.user_list.hasOwnProperty('' + userinfo.uid)) {
                     this.user_list['' + userinfo.uid] = userinfo;
-                    this.savedlist = this.user_list
+                    this.savedlist = this.user_list;
                     bus.$emit('set', this.user_list);
                     Cookies.set('userlist', this.user_list, {expires: 365})
                 }
@@ -90,15 +92,15 @@
         mounted(){
             bus.$emit('set', this.user_list);
             for (const x in this.user_list) {
-                this.avatar_unit = this.user_list[x]['navi_unit_info']
+                this.avatar_unit = this.user_list[x]['navi_unit_info'];
                 break
             }
         },
         methods: {
             cleancookie(){
                 Cookies.remove('userlist');
-                this.savedlist = null
-                this.avatar_unit = null
+                this.savedlist = null;
+                this.avatar_unit = null;
                 this.user_list = this.defaultlist;
 
                 bus.$emit('set', this.user_list);
@@ -127,7 +129,7 @@
             },
             handleInput: debounce(function () {
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/userSearch/', {
+                axios.get(util.api_server + 'llproxy/userSearch/', {
                     params: {
                         keyword: vm.val,
                         limit: 8
@@ -149,10 +151,10 @@
             }, 500),
             getavatarsrc(unit) {
                 if (unit && unit['unit_id']) {
-                    const urls = "https://db.loveliv.es/png/icon_from_unit_id/" + unit['unit_id'] + "/" + (unit['display_rank'] - 1) + ".png";
+                    const urls = util.icon_root + unit['unit_id'] + "/" + (unit['display_rank'] - 1) + ".png";
                     return urls
                 } else {
-                    return "http://rawfile.loveliv.es/assets/image/ui/common/com_win_22.png"
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             }
 

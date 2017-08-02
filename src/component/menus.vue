@@ -22,6 +22,7 @@
 
 <script>
     import bus from '../bus.js'
+    import Cookies from 'js-cookie'
     export default{
         data(){
             return {
@@ -40,9 +41,14 @@
         },
         methods:{
             getID (){
+
                 if(this.$route.params.id){
                     return this.$route.params.id
                 } else {
+                    const savedlist = Cookies.getJSON('userlist');
+                    if (savedlist) {
+                        this.user_list = savedlist
+                    }
                     for(const k in this.user_list) return k
                 }
             },

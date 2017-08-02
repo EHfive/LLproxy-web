@@ -58,9 +58,11 @@
                     请选择导出
                 </mu-sub-header>
 
-
+                <mu-list-item v-if="export_deck" :href="getexporturl()" target="_blank">
+                    跳转并导入 LLhelper
+                </mu-list-item>
                 <mu-list-item @click="exportdeck(true)">
-                    LLhelper
+                    LLhelper 卡组文件
                 </mu-list-item>
 
                 <mu-list-item @click="exportdeck()">
@@ -93,6 +95,8 @@
 <script>
     import axios from 'axios'
     import download from 'downloadjs/download.min'
+    import util from '../util.js'
+
     export default {
         data(){
             return {
@@ -177,15 +181,15 @@
             },
             getavatarsrc(unit) {
                 if (unit && unit['unit_id']) {
-                    const urls = "https://db.loveliv.es/png/icon_from_unit_id/" + unit['unit_id'] + "/" + (unit['display_rank'] - 1) + ".png";
+                    const urls = util.icon_root + unit['unit_id'] + "/" + (unit['display_rank'] - 1) + ".png";
                     return urls
                 } else {
-                    return "http://rawfile.loveliv.es/assets/image/ui/common/com_win_22.png"
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             },
             getskillsrc (skill_id){
                 if (this.skills && this.skills.hasOwnProperty(skill_id)) {
-                    return 'https://r.llsif.win/' + this.skills[skill_id].icon_asset
+                    return util.asset_root + this.skills[skill_id].icon_asset
                 }
                 return false
             },
@@ -195,7 +199,7 @@
             openBottomSheet (slt) {
                 this.sltdeck = slt;
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/deckExport/', {
+                axios.get(util.api_server + 'llproxy/deckExport/', {
                     params: {
                         uid: vm.$route.params.id,
                         deck_id: vm.decks[vm.sltdeck].unit_deck_id
@@ -224,9 +228,12 @@
 
 
             },
+            getexporturl(){
+                return "http://llhelper.duapp.com/llnewunitsis?unit=" + this.export_deck.llhelperString
+            },
             fetchCode(codestring){
                 const vm = this
-                axios.post('https://llsif.sokka.cn/api/llproxy/cardViewerCode/', {
+                axios.post(util.api_server + 'llproxy/cardViewerCode/', {
                     info_string: codestring
                 })
                     .then(function (response2) {

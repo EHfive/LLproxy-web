@@ -1,11 +1,16 @@
 <template>
     <div>
         <mu-card style="overflow: hidden">
-            <mu-card-header title="大众脸的同学" subTitle="eh5, cimoc">
-                <mu-avatar src="https://gss0.baidu.com/7Ls0a8Sm2Q5IlBGlnYG/sys/portraitl/item/f0cb27af?t=1494442107"
+            <mu-card-header title="大众脸的同学" subTitle="eh5">
+                <mu-avatar src="https://i.loli.net/2017/07/30/597d5306b696c.png"
                            slot="avatar"/>
             </mu-card-header>
             <mu-divider shallowInset></mu-divider>
+
+
+            <mu-card-text>
+                <p style="color: red">关于 8/2 号果限step-up招募 闪退 请在游戏中更新修复包</p>
+            </mu-card-text>
 
             <mu-card-title title="这是什么?" subTitle=" LLproxy"/>
             <mu-card-text>
@@ -45,6 +50,7 @@
             </mu-card-text>
             <mu-card-title title="反汉化"/>
             <mu-card-text>
+
                 LLproxy用户 在SIF中 重复按 其他-各种设置-下载 的 演唱会歌曲(全部)  2 或 3 次 获取补丁 <br>
                 新增了帮助界面 其他-帮助 可选择开关歌曲名替换及查看反汉化补丁状态
                 <br>

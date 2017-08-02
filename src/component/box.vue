@@ -37,7 +37,7 @@
                     <mu-tbody>
                         <mu-tr v-for="log,index in logs" :key="index" :class="bypt?'':'tr-notbypt'">
                             <mu-td class="wtcardpool">{{log.name}}
-                                <br><span>{{ log['update_time'].replace(new Date().getFullYear()+'-',"").replace('201',"1").replace("T"," ").slice(0, -3)}}</span>
+                                <br><span>{{ log['update_time'].replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ").slice(0, -3)}}</span>
                             </mu-td>
 
                             <template v-if="!bypt">
@@ -69,7 +69,7 @@
 
 <script>
     import axios from 'axios'
-
+    import util from '../util.js'
 
     export default {
         data(){
@@ -112,7 +112,7 @@
                 reload && (this.loadingapi = true);
                 // replace getPost with your data fetching util / API wrapper
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/secretBoxLog/', {
+                axios.get(util.api_server +'llproxy/secretBoxLog/', {
                     params: {
                         uid: vm.$route.params.id,
                         limit: vm.limit,
@@ -136,10 +136,10 @@
             },
             getavatarsrc(unit_id) {
                 if (unit_id > 0) {
-                    const urls = "https://db.loveliv.es/png/icon_from_unit_id/" + unit_id + "/0.png";
+                    const urls = util.icon_root + unit_id + "/0.png";
                     return urls
                 } else {
-                    return "http://rawfile.loveliv.es/assets/image/ui/common/com_win_22.png"
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             },
 
@@ -170,9 +170,11 @@
         }
 
     }
+
     .tr-notbypt {
         height: 65px;
     }
+
     .livetable {
         width: auto;
     }
@@ -188,9 +190,11 @@
     .wtavatar-bypt {
         width: 50%;
     }
+
     .fade-enter-active, .fade-leave-active {
         transition: opacity .5s
     }
+
     .fade-enter, .fade-leave-active {
         opacity: 0
     }

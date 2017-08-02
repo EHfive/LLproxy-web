@@ -114,6 +114,8 @@
     import axios from 'axios'
     import download from 'downloadjs/download.min'
     import bus from '../bus.js'
+    import util from '../util.js'
+
     export default {
         data(){
             return {
@@ -197,7 +199,7 @@
                 reload && (this.loadingapi = true);
                 // replace getPost with your data fetching util / API wrapper
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/unitsInfo/', {
+                axios.get(util.api_server + 'llproxy/unitsInfo/', {
                     params: {
                         uid: vm.$route.params.id,
                         limit: vm.limit,
@@ -221,10 +223,10 @@
             },
             getavatarsrc(unit) {
                 if (this.units && unit) {
-                    const urls = "https://db.loveliv.es/png/icon_from_unit_id/" + unit['unit_id'] + "/" + (unit['display_rank'] - 1) + ".png";
+                    const urls = util.icon_root + unit['unit_id'] + "/" + (unit['display_rank'] - 1) + ".png";
                     return urls
                 } else {
-                    return "http://rawfile.loveliv.es/assets/image/ui/common/com_win_22.png"
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             },
             downf(){
@@ -233,7 +235,7 @@
             export_team_builder(){
                 const vm = this
                 const frm = document.getElementById("exportframe")
-                axios.get('https://llsif.sokka.cn/api/llproxy/unitsExportJSON/', {
+                axios.get(util.api_server + 'llproxy/unitsExportJSON/', {
                     params: {uid: vm.$route.params.id}
                 })
                     .then(function (response2) {
@@ -254,7 +256,7 @@
                 if (!vm.dialog) {
                     return
                 }
-                axios.get('https://llsif.sokka.cn/api/llproxy/unitsExportJSON/', {
+                axios.get(util.api_server + 'llproxy/unitsExportJSON/', {
                     params: {uid: vm.$route.params.id, full: true}
                 })
                     .then(function (response2) {

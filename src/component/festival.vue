@@ -424,6 +424,7 @@
 <script>
     import axios from 'axios'
     import bus from '../bus.js'
+    import util from '../util.js'
 
     export default {
         data(){
@@ -548,7 +549,7 @@
             fetchMap (reload = true){
                 reload && (this.loadingmap = true);
                 const vm = this;
-                const map_url = "http://cos.sokka.cn/data/json/maps_dict.min.json"
+                const map_url = util.live_map
                 axios.get(map_url)
                     .then(function (response) {
                         vm.maps = response.data
@@ -565,7 +566,7 @@
 
                 reload && (this.loadingapi = true);
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/eventFestival/', {
+                axios.get(util.api_server + 'llproxy/eventFestival/', {
                     params: {
                         uid: vm.$route.params.id,
                         limit: vm.limit,
@@ -587,7 +588,7 @@
 
                     })
 
-                 axios.get('https://llsif.sokka.cn/api/llproxy/eventFestivalView/', {
+                 axios.get(util.api_server + 'llproxy/eventFestivalView/', {
                  params: {
                  uid: vm.$route.params.id,
                  eventid: vm.$route.query.eventid || vm.sltevent || null,
@@ -608,7 +609,7 @@
             },
             fetchLive(){
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/eventFestivalLive/', {
+                axios.get(util.api_server + 'llproxy/eventFestivalLive/', {
                     params: {
                         uid: vm.$route.params.id,
                         pairid: vm.pair_id,
@@ -628,7 +629,7 @@
             },
             fetchWeight(){
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/eventFestivalLast/', {
+                axios.get(util.api_server + 'llproxy/eventFestivalLast/', {
                     params: {
                         uid: vm.$route.params.id,
                     }
@@ -645,7 +646,7 @@
                     })
             },
             getlive_iconsrc(live_id, track_id, mgd = 2) {
-                const hosts = "https://r.llsif.win/"
+                const hosts = util.asset_root
                 if (this.maps && this.maps['' + live_id]) {
 
                     return hosts + this.maps['' + live_id]['live_icon_asset']
@@ -669,14 +670,14 @@
             },
             getavatarsrc(unit_id) {
                 if (unit_id) {
-                    const urls = "https://db.loveliv.es/png/icon_from_unit_id/" + unit_id + "/" + "0.png";
+                    const urls = util.icon_root + unit_id + "/" + "0.png";
                     return urls
                 } else {
-                    return "http://rawfile.loveliv.es/assets/image/ui/common/com_win_22.png"
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             },
             raw_file(path){
-                const hosts = "https://rawfile.loveliv.es/"
+                const hosts = util.asset_root
                 return hosts + path
             },
             list_or(list){

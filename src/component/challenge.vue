@@ -184,6 +184,7 @@
 <script>
     import axios from 'axios'
     import bus from '../bus.js'
+    import util from '../util.js'
 
     export default {
         data(){
@@ -271,7 +272,7 @@
             fetchMap (reload = true){
                 reload && (this.loadingmap = true);
                 const vm = this;
-                const map_url = "http://cos.sokka.cn/data/json/maps_dict.min.json"
+                const map_url = util.live_map
                 axios.get(map_url)
                     .then(function (response) {
                         vm.maps = response.data
@@ -288,7 +289,7 @@
 
                 reload && (this.loadingapi = true);
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/eventChallenge/', {
+                axios.get(util.api_server + 'llproxy/eventChallenge/', {
                     params: {
                         uid: vm.$route.params.id,
                         limit: vm.limit,
@@ -309,7 +310,7 @@
                         console.log(err)
 
                     })
-                axios.get('https://llsif.sokka.cn/api/llproxy/eventChallengeView/', {
+                axios.get(util.api_server + 'llproxy/eventChallengeView/', {
                     params: {
                         uid: vm.$route.params.id,
                         eventid: vm.$route.query.eventid || vm.sltevent || null,
@@ -329,7 +330,7 @@
 
             },
             getlive_iconsrc(live_id, track_id, mgd = 2) {
-                const hosts = "https://r.llsif.win/"
+                const hosts = util.asset_root
                 if (this.maps && this.maps['' + live_id]) {
 
                     return hosts + this.maps['' + live_id]['live_icon_asset']

@@ -13,6 +13,7 @@
 <script>
     import axios from 'axios'
     import bus from '../bus.js'
+    import util from '../util.js'
 
     export default {
         data(){
@@ -44,7 +45,7 @@
             fetchMap (reload = true){
                 reload && (this.loadingmap = true);
                 const vm = this;
-                const map_url = "http://cos.sokka.cn/data/json/removable_skill.min.json"
+                const map_url = util.removable_skill_map
                 axios.get(map_url)
                     .then(function (response) {
                         vm.skills = response.data
@@ -62,7 +63,7 @@
                 reload && (this.loadingapi = true);
                 // replace getPost with your data fetching util / API wrapper
                 const vm = this;
-                axios.get('https://llsif.sokka.cn/api/llproxy/deckInfo/', {
+                axios.get(util.api_server + 'llproxy/deckInfo/', {
                     params: {
                         uid: vm.$route.params.id,
                     }
