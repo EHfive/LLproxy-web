@@ -36,7 +36,7 @@
                                     <img :src="getavatarsrc(log.rewards[n-1].item_id)"
                                          v-if="log.rewards[n-1].type==1001" style="max-width: 40px;">
                                     <img v-else="" class="skill"
-                                         :src="'//r.llsif.win/'+(log.rewards[n-1].asset || passet[''+log.rewards[n-1].type])">
+                                         :src="util.asset_root +(log.rewards[n-1].asset || passet[''+log.rewards[n-1].type])">
                                     <span v-if="satuo">{{log.rewards[n - 1].name.replace('Smile', '甜美').replace('Pure', '清纯').replace('Cool', '洒脱')}}</span>
                                     <span v-else>{{log.rewards[n - 1].name.replace('甜美', 'Smile').replace('清纯', 'Pure').replace('洒脱', 'Cool')}}</span>
 
@@ -75,7 +75,8 @@
                 satuo: false,
                 showr: false,
                 notshown: false,
-                passet: null
+                passet: null,
+                util:util
             }
         },
         created () {

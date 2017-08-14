@@ -162,10 +162,14 @@
             // 此时 data 已经被 observed 了
             this.fetchMap()
             for (const x in this.eventlist) {
-
-                if (Date.now() / 1000 >= (this.eventlist[x].begin.timestamp)) {
-                    this.sltevent = this.eventlist[x].event_id;
+                this.sltevent = this.eventlist[x].event_id;
+                if (Date.now() / 1000 >= (this.eventlist[x].end.timestamp )) {
+                    continue
                 }
+                if (Date.now() / 1000 >= (this.eventlist[x].begin.timestamp )) {
+                    break
+                }
+
             }
             this.fetchData()
             bus.$on('refresh', () => {

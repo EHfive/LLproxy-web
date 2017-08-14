@@ -47,14 +47,14 @@
                 <mu-card-text>
                     <mu-flexbox>
                         <mu-flexbox-item class="flex-demo">
-                            <img src="https://r.llsif.win/assets/image/ui/common/com_icon_04.png" alt="loveca">
+                            <img :src="util.asset_root+'assets/image/ui/common/com_icon_04.png'" alt="loveca">
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
                             {{userinfo['sns_coin'] + ' (有偿 ' + userinfo['paid_sns_coin'] + ')'}}
                         </mu-flexbox-item>
 
                         <mu-flexbox-item class="flex-demo">
-                            <img src="https://r.llsif.win/assets/image/ui/common/com_icon_03.png" alt="金币">
+                            <img :src="util.asset_root+'assets/image/ui/common/com_icon_03.png'" alt="金币">
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
                             {{userinfo['game_coin']}}
@@ -62,7 +62,7 @@
                     </mu-flexbox>
                     <mu-flexbox>
                         <mu-flexbox-item class="flex-demo">
-                            <img src="https://r.llsif.win/assets/image/ui/item/com_icon_32.png" alt="友情pt">
+                            <img :src="util.asset_root+'assets/image/ui/item/com_icon_32.png'" alt="友情pt">
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
                             {{userinfo['social_point']}}
@@ -113,7 +113,7 @@
                         <mu-flexbox-item/>
 
                     </mu-flexbox>
-                    <mu-flexbox class="mt8">
+                    <mu-flexbox class="mt8" v-show="false">
                         <mu-flexbox-item class="flex-demo">
                             账号4.0更新时间
                         </mu-flexbox-item>
@@ -153,7 +153,8 @@
                 error: null,
                 flag: false,
                 lefttime: 0,
-                time: null
+                time: null,
+                util:util
             }
         },
         mounted () {

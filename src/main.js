@@ -5,7 +5,8 @@ import VueRouter from 'vue-router'
 
 
 import 'muse-ui/dist/muse-ui.css'
-import 'muse-ui/dist/theme-carbon.min.css'
+// import 'muse-ui/dist/theme-carbon.min.css'
+// import 'muse-ui/dist/theme-light.min.css'
 import VueClipboard from 'vue-clipboard2'
 
 Vue.use(VueClipboard);
@@ -53,11 +54,11 @@ const router = new VueRouter({
                     path: 'search',
                     component: Search
                 },
-                {
-                    name: 'switch',
-                    path: 'switch',
-                    component: TSwitch
-                },
+                // {
+                //     name: 'switch',
+                //     path: 'switch',
+                //     component: TSwitch
+                // },
                 {
                     name: 'userInfo',
                     path: ':id',

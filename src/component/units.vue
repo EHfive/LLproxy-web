@@ -165,7 +165,11 @@
 
         methods: {
             isAppleD(){
-                return navigator.userAgent.match(/Apple/ig) || navigator.userAgent.match(/Safari/ig)
+                const matchs = [/Apple/ig,/Safari/ig,/Edge/ig,/Trident/ig,/Opera/ig];
+                for(const match of matchs){
+                    if (navigator.userAgent.match(match)) return true
+                }
+                return false
             },
             onCopy: function (e) {
                 this.toast = "复制成功"

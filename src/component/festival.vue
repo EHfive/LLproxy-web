@@ -227,8 +227,7 @@
                 <span v-if="pair_id >0">当前无记录号为 {{pair_id}} 的项</span>
                 <span v-else>当前无记录</span>
                 <br><br>
-                点击 Live详细 或 <br>
-                继续点击 Newer / Forward 跳至最后一次live <br>
+                点击 Live详细  跳至最后一次live <br>
 
             </div>
             <div v-if="activeTab === 'combo' && weight">
@@ -430,7 +429,7 @@
         data(){
             return {
                 loadingmap: true,
-                loadingapi: true,
+                loadingapi: false,
                 lives: null,
                 page: 1,
                 limit: 10,
@@ -468,17 +467,21 @@
             // 此时 data 已经被 observed 了
             this.fetchMap()
             for (const x in this.eventlist) {
-
-                if (Date.now() / 1000 >= (this.eventlist[x].begin.timestamp )) {
-                    this.sltevent = this.eventlist[x].event_id;
+                this.sltevent = this.eventlist[x].event_id;
+                if (Date.now() / 1000 >= (this.eventlist[x].end.timestamp )) {
+                    continue
                 }
-                break
+                if (Date.now() / 1000 >= (this.eventlist[x].begin.timestamp )) {
+                    break
+                }
+
             }
             if (this.$route.query.eventid) this.sltevent = this.$route.query.eventid
             this.pair_id = -1
-            this.fetchData(true)
-            this.fetchLive()
-            this.fetchWeight()
+//            this.fetchLive()
+//            this.fetchData(true)
+//
+//            this.fetchWeight()
             bus.$on('refresh', () => {
                 this.fetchLive()
                 this.fetchData(true)
@@ -498,18 +501,20 @@
         methods: {
             changept(){
                 this.page = 1
-                this.fetchData(false)
+                this.fetchLive()
+                this.fetchWeight()
+                this.fetchData(true)
             },
             handleNew(){
                 if (this.pair_id === -1 || this.pair_id === this.last_pair_id) this.fetchLive();
                 else {
-                    if (this.feslive) this.pair_id += 1
+                    if (this.feslive || this.pair_id <= this.last_pair_id) this.pair_id += 1
                     else this.pair_id = -1
                 }
 
             },
             handleForward(){
-                if (!this.feslive) {
+                if (!this.feslive && this.pair_id > this.last_pair_id) {
                     this.pair_id = -1
                     return
                 }
@@ -524,13 +529,13 @@
 
             },
             handleLog(){
-                this.fetchData(reload=false)
+                this.fetchData(false)
             },
             handleCombo(){
                 this.fetchWeight()
             },
             handleCount(){
-
+                this.fetchData(false)
             },
             handleInfo () {
                 this.pair_id = -1;
@@ -597,7 +602,6 @@
                  .then(function (response) {
 
                  vm.eventview = response.data.result;
-                 console.log(response.data.result);
                  reload && (vm.loadingapi = false);
                  })
                  .catch(function (err) {
@@ -637,7 +641,6 @@
                     .then(function (response) {
 
                         vm.weight = response.data.result;
-                        console.log(response.data.result);
                     })
                     .catch(function (err) {
                         vm.error = err.toString();

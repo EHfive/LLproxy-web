@@ -4,13 +4,15 @@
             <mu-circular-progress :size="120" :strokeWidth="7"/>
         </mu-card>
 
-        <mu-card v-else-if="lives&&maps" style="padding: 0px 0px">
+        <mu-card v-else-if="pairs&&maps" style="padding: 0px 0px">
             <!--<mu-card-header title="Myron Avatar" subTitle="sub title">-->
             <!--<mu-avatar src="/images/uicon.jpg" slot="avatar"/>-->
             <!--</mu-card-header>-->
             <mu-tabs :value="activeTab" @change="handleTabChange">
-                <mu-tab value="tab1" title="Challenge Fes 记录"/>
-                <mu-tab value="tab2" title="统计"/>
+                <mu-tab value="pair" title="Challenge Fes 记录" @click="handlePair()"/>
+                <mu-tab value="info" title="Live 详细" @click="handleInfo()"/>
+                <mu-tab value="log" title="Round 视图" @click="handleRound()"/>
+                <mu-tab value="count" title="统计" @click="handleCount()"/>
             </mu-tabs>
             <mu-content-block style="margin-left: 10px">
 
@@ -19,11 +21,46 @@
                                   :title="vals.title+' /'+vals.event_id"
                     ></mu-menu-item>
                 </mu-select-field>
-                <!--<mu-switch  label="显示非活动曲" v-model="shownormal" labelLeft=""></mu-switch>-->
+
             </mu-content-block>
-            <div v-if="activeTab === 'tab2' && eventview">
+            <div v-if="activeTab === 'pair' && lives">
+                <div>
+                    <mu-table class="livetable" :selectable="false" :showCheckbox="false" :fixedHeader="false"
+                              height="560px">
+                        <mu-thead slot="header" class="tbth">
+                            <mu-th class="wtround">序号</mu-th>
+                            <mu-th class="wtmap">Maps</mu-th>
+                            <mu-th class="wtcover">Datetime</mu-th>
+                        </mu-thead>
+                        <mu-tbody>
+                            <mu-tr v-for="pair,index in pairs" :key="index">
+                                <mu-td class="cursor-pointer" style="font-size: 125%;" @click="goto_live(pair['pair_id'])">
+                                    {{pair['pair_id']}}
+                                </mu-td>
+                                <mu-td class="cursor-pointer" style="text-align: left" @click="goto_live(pair['pair_id'])">
+                                    <template  v-for="i in pair.curr_round" >
+                                        <img style="margin-right: 15px;max-width: 65px"  v-show="pair.round_setids[i-1]" :src="getlive_iconsrc(pair.round_setids[i-1])" :key="i"></img>
+                                    </template>
+                                </mu-td>
+                                <mu-td style="font-size: 95%">
+                                    {{timefmt(pair['update_time'])}}
+                                </mu-td>
+                            </mu-tr>
+                        </mu-tbody>
+                    </mu-table>
+                </div>
+                <mu-card-actions>
+                    <!--<mu-flat-button label="Action 1"/>-->
+                    <!--<mu-flat-button label="Action 2"/>-->
+                    <mu-pagination :total="count" :current="page" @pageChange="handlepage"
+                                   :defaultPageSize="limit">
+                    </mu-pagination>
+                </mu-card-actions>
+            </div>
+            <div v-if="activeTab === 'count' && eventview">
                 <mu-card-text>
                     <mu-flexbox>
+
                         <mu-flexbox-item class="flex-demo">
                             获得 LP :
                         </mu-flexbox-item>
@@ -38,11 +75,28 @@
                             {{eventview.total_ticket_gain}}
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
-
+                            获得 技能exp :
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
-
+                            {{eventview.total_exp_gain}}
                         </mu-flexbox-item>
+                    </mu-flexbox>
+                    <br>
+                    <mu-flexbox>
+                        <mu-flexbox-item class="flex-demo">
+                            BUFF消耗 G :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.total_coin_cost}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo" />
+
+                        <mu-flexbox-item class="flex-demo" />
+                        <mu-flexbox-item class="flex-demo" />
+
+                        <mu-flexbox-item class="flex-demo" />
+
+
                     </mu-flexbox>
                     <br>
                     <mu-flexbox>
@@ -118,14 +172,15 @@
                             <mu-th style="text-align: left" v-for="n in 1,5" :key="n">Round. {{n}}</mu-th>
                         </mu-thead>
                         <mu-tbody>
-                            <mu-td style="text-align: left" v-for="v,k in eventview.combo_multiple_r" :key="k">x <span style="font-size: small">{{v}}</span></mu-td>
+                            <mu-td style="text-align: left" v-for="v,k in eventview.combo_multiple_r" :key="k">x <span
+                                    style="font-size: small">{{v}}</span></mu-td>
                         </mu-tbody>
                     </mu-table>
                 </mu-card-text>
 
                 <br>
             </div>
-            <div v-if="activeTab === 'tab1'">
+            <div v-if="activeTab === 'log' && lives">
                 <div>
                     <mu-table class="livetable" :selectable="false" :showCheckbox="false" :fixedHeader="false"
                               height="560px">
@@ -141,17 +196,17 @@
                         <mu-tbody>
                             <mu-tr v-for="live,index in lives" :key="index"
                                    :class="(live['max_combo']==maps[live['live_setting_id']].s_rank_combo?'live-fc':'')">
-                                <mu-td style="font-size: 125%">
+                                <mu-td style="font-size: 125%" class="cursor-pointer" @click="goto_live(live['pair_id'])">
                                     {{live['pair_id']}}-{{live['round']}}
                                 </mu-td>
-                                <mu-td>
+                                <mu-td class="cursor-pointer" @click="goto_live(live['pair_id'])">
                                     {{live['event_point']}} pt
                                 </mu-td>
 
-                                <mu-td class="cursor-pointer" @click="goto_live(live['event_id'])">
+                                <mu-td class="cursor-pointer" @click="goto_live(live['pair_id'])">
                                     {{ getmapname(live['live_setting_id'], live['is_random']) || ("difficulty-id: " + live['live_difficulty_id'])}}
                                     <br><span
-                                        style="font-size: 85%">{{ live['update_time'].replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ")}}</span>
+                                        style="font-size: 85%">{{ timefmt(live['update_time'])}}</span>
                                 </mu-td>
 
                                 <mu-td>{{live['score']}}</mu-td>
@@ -171,10 +226,28 @@
                 <mu-card-actions>
                     <!--<mu-flat-button label="Action 1"/>-->
                     <!--<mu-flat-button label="Action 2"/>-->
-                    <mu-pagination :total="count" :current="page" @pageChange="handlepage"
-                                   :defaultPageSize="limit">
+                    <mu-pagination :total="round_count" :current="round_page" @pageChange="handle_round_page"
+                                   :defaultPageSize="round_limit">
                     </mu-pagination>
                 </mu-card-actions>
+            </div>
+            <mu-card-actions v-if="activeTab === 'info'" style="margin-left: 20px">
+                <mu-flat-button label="Newer" style="margin-right: 20px" @click="handleNew()"/>
+                <mu-flat-button label="Forward" @click="handleForward()"/>
+            </mu-card-actions>
+            <div v-if="activeTab === 'info' && feslive">
+                <mu-card-text>
+                    <round-shower :pair="feslive.pair_id" :showmax="5" :showbox="feslive.round_setids"></round-shower>
+                    {{feslive.pair_id}} <br>
+                    {{round}}
+                </mu-card-text>
+            </div>
+            <div v-if="activeTab === 'info' && !feslive" style="padding: 50px">
+                <span v-if="pair_id >0">当前无记录号为 {{pair_id}} 的项</span>
+                <span v-else>当前无记录</span>
+                <br><br>
+                点击 Live详细 跳至最后一次live <br>
+
             </div>
         </mu-card>
 
@@ -185,20 +258,27 @@
     import axios from 'axios'
     import bus from '../bus.js'
     import util from '../util.js'
-
+    import roundshower from './tiny/round-shower.vue'
     export default {
         data(){
             return {
                 loadingmap: true,
-                loadingapi: true,
-                lives: null,
+                loadingapi: false,
+                pairs: null,
+                pair_id: this.$route.query.pairid || -1,
+                feslive: null,
+                lives:null,
                 page: 1,
                 limit: 10,
                 count: null,
+                round_page: 1,
+                round_limit: 10,
+                round_count: null,
+                last_pair_id: 0,
                 error: null,
                 maps: null,
                 sltevent: 0,
-                activeTab: 'tab1',
+                activeTab: 'pair',
                 eventview: null,
                 eventlist: [
                     {
@@ -213,6 +293,19 @@
                             "timestamp": 1499320800
                         },
                         type: 4
+                    },
+                    {
+                        event_id: 80,
+                        title: "第四次 Challenge Festival",
+                        begin: {
+                            "time": "2017-08-11 14:00:00",
+                            "timestamp": 1502431200
+                        },
+                        end: {
+                            "time": "2017-08-22 14:00:00",
+                            "timestamp": 1503381600
+                        },
+                        type: 4
                     }
                 ]
 
@@ -221,15 +314,20 @@
         created () {
             // 组件创建完后获取数据，
             // 此时 data 已经被 observed 了
-            this.fetchMap()
+            this.fetchMap();
             for (const x in this.eventlist) {
-
-                if (Date.now() / 1000 >= (this.eventlist[x].begin.timestamp )) {
-                    this.sltevent = this.eventlist[x].event_id;
+                this.sltevent = this.eventlist[x].event_id;
+                if (Date.now() / 1000 >= (this.eventlist[x].end.timestamp )) {
+                    continue
                 }
-                break
+                if (Date.now() / 1000 >= (this.eventlist[x].begin.timestamp )) {
+                    break
+                }
+
             }
-            this.fetchData()
+//            this.fetchData(false);
+//            this.fetchRound();
+//            this.fetchLive();
             bus.$on('refresh', () => {
 
                 this.fetchData()
@@ -242,13 +340,18 @@
             // 如果路由有变化，会再次执行该方法
             '$route': 'fetchData',
             'shownormal': 'changept',
-            'sltevent': 'changept'
+            'sltevent': 'changept',
+            'pair_id': 'fetchLive'
         },
 
         methods: {
             changept(){
-                this.page = 1
-                this.fetchData(false)
+                this.page = 1;
+                this.round_page = 1;
+                this.pair_id=-1;
+                this.fetchData(true);
+                this.fetchRound();
+                this.fetchLive();
             },
             handleTabChange (val) {
                 this.activeTab = val
@@ -256,26 +359,58 @@
             handleActive () {
                 window.alert('tab active')
             },
-            goto_live(eventid){
-                this.$router.push({
-                    path: this.$route.path,
-                    query: {
-                        eventid: eventid
-                    }
-                })
+            handleRound(){
+                this.fetchRound()
+            },
+            handleCount(){
+                this.fetchData(false)
+            },
+            handlePair(){
+                this.fetchData(false)
+            },
+            handleInfo(){
+                this.fetchLive()
+            },
+            handleNew(){
+                if (this.pair_id === -1 || this.pair_id === this.last_pair_id) this.fetchLive();
+                else {
+                    if (this.feslive || this.pair_id <= this.last_pair_id) this.pair_id += 1
+                    else this.pair_id = -1
+                }
+
+            },
+            handleForward(){
+                if (!this.feslive && this.pair_id > this.last_pair_id) {
+                    this.pair_id = -1
+                    return
+                }
+                if (this.pair_id === -1) this.pair_id = (this.feslive.pair_id - 1) || 1;
+                else {
+                    if (this.pair_id >= 2) this.pair_id -= 1
+                }
+            },
+            goto_live(pairid){
+                this.pair_id = pairid
+                this.activeTab = 'info'
+                this.fetchLive()
             },
             handlepage (newIndex) {
-                this.page = newIndex
-                this.fetchData(false)
+                this.page = newIndex;
+                this.fetchData(false);
+                document.getElementsByClassName('mu-table')[0].parentElement.scrollTop = 0
+            },
+            handle_round_page (newIndex) {
+                this.round_page = newIndex;
+                this.fetchRound();
                 document.getElementsByClassName('mu-table')[0].parentElement.scrollTop = 0
             },
             fetchMap (reload = true){
                 reload && (this.loadingmap = true);
                 const vm = this;
-                const map_url = util.live_map
+                const map_url = util.live_map;
                 axios.get(map_url)
                     .then(function (response) {
-                        vm.maps = response.data
+                        vm.maps = response.data;
                         reload && (vm.loadingmap = false);
                     })
                     .catch(function (err) {
@@ -284,12 +419,53 @@
 
                     })
             },
+            fetchLive(){
+                const vm = this;
+                axios.get(util.api_server + 'llproxy/eventChallengeLive/', {
+                    params: {
+                        uid: vm.$route.params.id,
+                        pairid: vm.pair_id,
+                        eventid: vm.$route.query.eventid || vm.sltevent || null,
+                    }
+                })
+                    .then(function (response) {
 
+                        vm.feslive = response.data.result;
+                        if (vm.pair_id === -1) vm.last_pair_id = vm.feslive.pair_id
+                    })
+                    .catch(function (err) {
+                        vm.error = err.toString();
+                        console.log(err)
+
+                    })
+            },
+            fetchRound(){
+                const vm = this;
+                axios.get(util.api_server + 'llproxy/eventChallenge/', {
+                    params: {
+                        uid: vm.$route.params.id,
+                        limit: vm.round_limit,
+                        page: vm.round_page,
+                        eventid: vm.sltevent || vm.$route.query.eventid || null,
+                    }
+                })
+                    .then(function (response) {
+                        vm.lives = response.data.result.lives;
+                        vm.round_page = response.data['result']['curr_page'];
+                        vm.round_limit = response.data['result']['limit'];
+                        vm.round_count = response.data['result']['count']
+                    })
+                    .catch(function (err) {
+                        vm.error = err.toString();
+                        console.log(err)
+
+                    })
+            },
             fetchData (reload = true) {
 
                 reload && (this.loadingapi = true);
                 const vm = this;
-                axios.get(util.api_server + 'llproxy/eventChallenge/', {
+                axios.get(util.api_server + 'llproxy/eventChallengePairs/', {
                     params: {
                         uid: vm.$route.params.id,
                         limit: vm.limit,
@@ -299,17 +475,17 @@
                 })
                     .then(function (response) {
 
-                        vm.lives = response.data['result']['lives'];
+                        vm.pairs = response.data['result']['pairs'];
                         vm.page = response.data['result']['curr_page'];
                         vm.limit = response.data['result']['limit'];
-                        vm.count = response.data['result']['count']
+                        vm.count = response.data['result']['count'];
                         reload && (vm.loadingapi = false);
                     })
                     .catch(function (err) {
                         vm.error = err.toString();
                         console.log(err)
 
-                    })
+                    });
                 axios.get(util.api_server + 'llproxy/eventChallengeView/', {
                     params: {
                         uid: vm.$route.params.id,
@@ -319,7 +495,6 @@
                     .then(function (response) {
 
                         vm.eventview = response.data.result;
-                        console.log(response.data.result);
                         reload && (vm.loadingapi = false);
                     })
                     .catch(function (err) {
@@ -330,7 +505,7 @@
 
             },
             getlive_iconsrc(live_id, track_id, mgd = 2) {
-                const hosts = util.asset_root
+                const hosts = util.asset_root;
                 if (this.maps && this.maps['' + live_id]) {
 
                     return hosts + this.maps['' + live_id]['live_icon_asset']
@@ -342,17 +517,42 @@
             getmapname(live_id, rand = false) {
                 if (this.maps && this.maps['' + live_id]) {
 
-                    const i = this.maps['' + live_id]
+                    const i = this.maps['' + live_id];
                     return i['name'] + (rand ? "-随机-" : '') + " [" + i['difficulty_text'] + "]"
                 }
                 return null
             },
+
             getpercent(live) {
-                const p = live['perfect_cnt']
-                const combo_all = live['perfect_cnt'] + live['great_cnt'] + live['good_cnt'] + live['miss_cnt'] + live['bad_cnt']
+                const p = live['perfect_cnt'];
+                const combo_all = live['perfect_cnt'] + live['great_cnt'] + live['good_cnt'] + live['miss_cnt'] + live['bad_cnt'];
                 return (Math.round(p / combo_all * 1000) / 10.0 + "%")
+            },
+            timefmt(isotime){
+                return isotime.replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ")
+            },
+            getavatarsrc(unit_id) {
+                if (unit_id) {
+                    const urls = util.icon_root + unit_id + "/" + "0.png";
+                    return urls
+                } else {
+                    return util.asset_root + "assets/image/ui/common/com_win_22.png"
+                }
+            },
+            raw_file(path){
+                const hosts = util.asset_root
+                return hosts + path
+            },
+            list_or(list){
+                for (var x of list) {
+                    if (x) return true
+                }
+                return false
             }
 
+        },
+        components:{
+            'round-shower': roundshower
         }
     }
 </script>

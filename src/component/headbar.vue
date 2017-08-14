@@ -5,10 +5,10 @@
 
             <mu-avatar slot="right" class="appbar-avatar"
                        :src="getavatarsrc(avatar_unit)"></mu-avatar>
-               <mu-auto-complete icon="search" class="appbar-auto-complete" hintText="UID/邀请ID/昵称"
-                                 v-model.trim="val" slot="right"
-                                 @input="handleInput" @keydown.enter="search()" @change="search()" filter="noFilter"
-                                 :dataSource="dataSource" openOnFocus></mu-auto-complete>
+            <mu-auto-complete icon="search" class="appbar-auto-complete" hintText="UID/邀请ID/昵称"
+                              v-model.trim="val" slot="right"
+                              @input="handleInput" @keydown.enter="search()" @change="search()" filter="noFilter"
+                              :dataSource="dataSource" openOnFocus></mu-auto-complete>
 
 
         </mu-appbar>
@@ -24,6 +24,7 @@
                               @click="goto('/user/'+user.uid)"></mu-menu-item>
                 <mu-menu-item title="清除账号" @click="cleancookie()"></mu-menu-item>
                 <mu-menu-item style="margin-top: 25px" title="关闭侧栏" @click="toggle()"></mu-menu-item>
+                <mu-menu-item style="" :title="'切换主题 - '+theme.toUpperCase()" @click="switchtheme()"></mu-menu-item>
 
             </mu-menu>
 
@@ -37,7 +38,10 @@
     import bus from '../bus.js'
     import Cookies from 'js-cookie'
     import util from '../util.js'
-
+    import light from '!raw-loader!muse-ui/dist/theme-default.min.css'
+    //    import dark from '!raw-loader!muse-ui/dist/theme-dark.min.css'
+    import carbon from '!raw-loader!muse-ui/dist/theme-carbon.min.css'
+    import teal from '!raw-loader!muse-ui/dist/theme-teal.min.css'
     export default {
         data () {
             return {
@@ -47,10 +51,20 @@
                 open: false,
                 savedlist: null,
                 user_list: {},
-                avatar_unit: null
+                avatar_unit: null,
+                theme:null,
+                themes: {
+                    carbon,
+                    light,
+//                    dark,
+                    teal
+
+
+                },
             }
         },
         created () {
+            this.switchtheme(true)
             this.defaultlist = {
                 '865384': {
                     uid: 865384,
@@ -88,6 +102,9 @@
                 }
                 this.avatar_unit = userinfo.navi_unit_info
             })
+            bus.$on('setnavi', (avatar_unit) => {
+                this.avatar_unit = avatar_unit;
+            })
         },
         mounted(){
             bus.$emit('set', this.user_list);
@@ -111,7 +128,7 @@
             },
             goto(path) {
                 this.toggle();
-                if(this.$route.path === path){
+                if (this.$route.path === path) {
                     bus.$emit('refresh')
                 } else {
                     this.$router.push(path)
@@ -156,6 +173,35 @@
                 } else {
                     return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
+            },
+            switchtheme(hold=false){
+                let tid = parseInt(localStorage.getItem('pll-theme'))
+                const tlist = ['carbon', 'light', 'teal']
+                if (tid <= 2 && tid >= 0) {
+
+                } else {
+                    tid = 0
+                }
+                if(!hold) tid = (tid + 1) % 3;
+                this.changeTheme(tlist[tid])
+                localStorage.setItem('pll-theme',tid)
+                console.log(tid)
+
+            },
+            changeTheme (theme) {
+                this.theme = theme
+                const styleEl = this.getThemeStyle()
+                styleEl.innerHTML = this.themes[theme] || ''
+
+            },
+            getThemeStyle () {
+                const themeId = 'muse-theme'
+                let styleEl = document.getElementById(themeId)
+                if (styleEl) return styleEl
+                styleEl = document.createElement('style')
+                styleEl.id = themeId
+                document.body.appendChild(styleEl)
+                return styleEl
             }
 
 
@@ -221,6 +267,7 @@
     .appbar-avatar {
 
     }
+
     .iconcl {
         margin: 0;
         padding: 0;

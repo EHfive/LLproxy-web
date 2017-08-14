@@ -8,9 +8,9 @@
             <mu-divider shallowInset></mu-divider>
 
 
-            <mu-card-text>
-                <p style="color: red">关于 8/2 号果限step-up招募 闪退 请在游戏中更新修复包</p>
-            </mu-card-text>
+            <!--<mu-card-text>-->
+                <!--<p style="color: red">关于 8/2 号果限step-up招募 闪退 请在游戏中更新修复包</p>-->
+            <!--</mu-card-text>-->
 
             <mu-card-title title="这是什么?" subTitle=" LLproxy"/>
             <mu-card-text>
