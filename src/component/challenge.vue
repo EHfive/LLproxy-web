@@ -34,12 +34,18 @@
                         </mu-thead>
                         <mu-tbody>
                             <mu-tr v-for="pair,index in pairs" :key="index">
-                                <mu-td class="cursor-pointer" style="font-size: 125%;" @click="goto_live(pair['pair_id'])">
+                                <mu-td class="cursor-pointer" style="font-size: 125%;"
+                                       @click="goto_live(pair['pair_id'],null)">
                                     {{pair['pair_id']}}
                                 </mu-td>
-                                <mu-td class="cursor-pointer" style="text-align: left" @click="goto_live(pair['pair_id'])">
-                                    <template  v-for="i in pair.curr_round" >
-                                        <img style="margin-right: 15px;max-width: 65px"  v-show="pair.round_setids[i-1]" :src="getlive_iconsrc(pair.round_setids[i-1])" :key="i"></img>
+                                <mu-td  style="text-align: left">
+                                    <template v-for="i in pair.curr_round" >
+                                        <img style="margin-right: 15px;max-width: 65px"
+                                             @click="goto_live(pair['pair_id'],i)"
+                                             v-show="pair.round_setids[i-1]"
+                                             :src="getlive_iconsrc(pair.round_setids[i-1])"
+                                             class="cursor-pointer"
+                                             :key="i">
                                     </template>
                                 </mu-td>
                                 <mu-td style="font-size: 95%">
@@ -52,7 +58,7 @@
                 <mu-card-actions>
                     <!--<mu-flat-button label="Action 1"/>-->
                     <!--<mu-flat-button label="Action 2"/>-->
-                    <mu-pagination :total="count" :current="page" @pageChange="handlepage"
+                    <mu-pagination style="margin: 10px 0" :total="count" :current="page" @pageChange="handlepage"
                                    :defaultPageSize="limit">
                     </mu-pagination>
                 </mu-card-actions>
@@ -89,12 +95,18 @@
                         <mu-flexbox-item class="flex-demo">
                             {{eventview.total_coin_cost}}
                         </mu-flexbox-item>
-                        <mu-flexbox-item class="flex-demo" />
-
-                        <mu-flexbox-item class="flex-demo" />
-                        <mu-flexbox-item class="flex-demo" />
-
-                        <mu-flexbox-item class="flex-demo" />
+                        <mu-flexbox-item class="flex-demo">
+                            平均Score:
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.avg_score}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            平均P率
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{ Math.round(eventview.avg_perfect_rate * 1000) / 10.0}}%
+                        </mu-flexbox-item>
 
 
                     </mu-flexbox>
@@ -196,14 +208,15 @@
                         <mu-tbody>
                             <mu-tr v-for="live,index in lives" :key="index"
                                    :class="(live['max_combo']==maps[live['live_setting_id']].s_rank_combo?'live-fc':'')">
-                                <mu-td style="font-size: 125%" class="cursor-pointer" @click="goto_live(live['pair_id'])">
+                                <mu-td style="font-size: 125%" class="cursor-pointer"
+                                       @click="goto_live(live['pair_id'],live.round)">
                                     {{live['pair_id']}}-{{live['round']}}
                                 </mu-td>
-                                <mu-td class="cursor-pointer" @click="goto_live(live['pair_id'])">
+                                <mu-td class="cursor-pointer" @click="goto_live(live['pair_id'],live.round)">
                                     {{live['event_point']}} pt
                                 </mu-td>
 
-                                <mu-td class="cursor-pointer" @click="goto_live(live['pair_id'])">
+                                <mu-td class="cursor-pointer" @click="goto_live(live['pair_id'],live.round)">
                                     {{ getmapname(live['live_setting_id'], live['is_random']) || ("difficulty-id: " + live['live_difficulty_id'])}}
                                     <br><span
                                         style="font-size: 85%">{{ timefmt(live['update_time'])}}</span>
@@ -226,21 +239,43 @@
                 <mu-card-actions>
                     <!--<mu-flat-button label="Action 1"/>-->
                     <!--<mu-flat-button label="Action 2"/>-->
-                    <mu-pagination :total="round_count" :current="round_page" @pageChange="handle_round_page"
+                    <mu-pagination style="margin: 10px 0" :total="round_count" :current="round_page"
+                                   @pageChange="handle_round_page"
                                    :defaultPageSize="round_limit">
                     </mu-pagination>
                 </mu-card-actions>
             </div>
             <mu-card-actions v-if="activeTab === 'info'" style="margin-left: 20px">
                 <mu-flat-button label="Newer" style="margin-right: 20px" @click="handleNew()"/>
-                <mu-flat-button label="Forward" @click="handleForward()"/>
+
+                <mu-flat-button style="margin-right: 20px" label="Forward" @click="handleForward()"/>
+                <mu-flat-button :label="'组 '+feslive.pair_id" @click="handleInfo()"/>
             </mu-card-actions>
             <div v-if="activeTab === 'info' && feslive">
-                <mu-card-text>
-                    <round-shower :pair="feslive.pair_id" :showmax="5" :showbox="feslive.round_setids"></round-shower>
-                    {{feslive.pair_id}} <br>
-                    {{round}}
+                <mu-card-text style="padding: 0 12px;">
+                    <round-shower  :roundin="cround" :maps="maps" :lives="feslive.lives" :pair="feslive.pair_id+''+(cround?cround:'')"
+                                  :showmax="5" :showbox="feslive.round_setids"></round-shower>
+
+                    <mu-table style="margin-top: 5px">
+                        <mu-tr>
+                            <mu-td v-for="val,k in feslive.reward_item_list" :key="k"
+                                   style="text-align: center;width: 100px">
+                                <mu-badge class="demo-badge-content" circle
+                                          :color="{1:'#dba44f',2:'grey400',3:'yellowA700'}[val.rarity]"
+                                          :content="''+{1:'铜',2:'银',3:'金'}[val.rarity]">
+
+                                    <mu-avatar v-if="val.type==1001" :size="60"
+                                               :src="val.asset?raw_file(val.asset):getavatarsrc(val.item_id)"></mu-avatar>
+                                    <template v-else-if="val.asset">
+                                        <img :src="raw_file(val.asset)" alt="" class="img-responsive">
+                                    </template>
+                                </mu-badge>
+                                <span v-if="val.amount >1">x {{val.amount}}</span>
+                            </mu-td>
+                        </mu-tr>
+                    </mu-table>
                 </mu-card-text>
+                <br>
             </div>
             <div v-if="activeTab === 'info' && !feslive" style="padding: 50px">
                 <span v-if="pair_id >0">当前无记录号为 {{pair_id}} 的项</span>
@@ -267,10 +302,11 @@
                 pairs: null,
                 pair_id: this.$route.query.pairid || -1,
                 feslive: null,
-                lives:null,
+                lives: null,
                 page: 1,
                 limit: 10,
                 count: null,
+                cround: null,
                 round_page: 1,
                 round_limit: 10,
                 round_count: null,
@@ -348,7 +384,7 @@
             changept(){
                 this.page = 1;
                 this.round_page = 1;
-                this.pair_id=-1;
+                this.pair_id = -1;
                 this.fetchData(true);
                 this.fetchRound();
                 this.fetchLive();
@@ -369,17 +405,21 @@
                 this.fetchData(false)
             },
             handleInfo(){
+                this.pair_id = -1;
                 this.fetchLive()
             },
             handleNew(){
+                this.cround = null;
                 if (this.pair_id === -1 || this.pair_id === this.last_pair_id) this.fetchLive();
                 else {
                     if (this.feslive || this.pair_id <= this.last_pair_id) this.pair_id += 1
                     else this.pair_id = -1
                 }
 
+
             },
             handleForward(){
+                this.cround = null;
                 if (!this.feslive && this.pair_id > this.last_pair_id) {
                     this.pair_id = -1
                     return
@@ -389,8 +429,10 @@
                     if (this.pair_id >= 2) this.pair_id -= 1
                 }
             },
-            goto_live(pairid){
+            goto_live(pairid, cround){
+                this.cround = cround
                 this.pair_id = pairid
+
                 this.activeTab = 'info'
                 this.fetchLive()
             },
@@ -431,6 +473,7 @@
                     .then(function (response) {
 
                         vm.feslive = response.data.result;
+
                         if (vm.pair_id === -1) vm.last_pair_id = vm.feslive.pair_id
                     })
                     .catch(function (err) {
@@ -551,7 +594,7 @@
             }
 
         },
-        components:{
+        components: {
             'round-shower': roundshower
         }
     }

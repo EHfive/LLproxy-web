@@ -5,8 +5,6 @@ import VueRouter from 'vue-router'
 
 
 import 'muse-ui/dist/muse-ui.css'
-// import 'muse-ui/dist/theme-carbon.min.css'
-// import 'muse-ui/dist/theme-light.min.css'
 import VueClipboard from 'vue-clipboard2'
 
 Vue.use(VueClipboard);
@@ -33,7 +31,7 @@ import DeckInfo from './component/deckInfo.vue'
 import EffortBox from './component/effortbox.vue'
 import Challenge from  './component/challenge.vue'
 import Festival from './component/festival.vue'
-const TSwitch = resolve => require(['./component/themeswitch.vue'], resolve)
+// const TSwitch = resolve => require(['./component/themeswitch.vue'], resolve)
 const router = new VueRouter({
     // mode: 'history',
     routes: [

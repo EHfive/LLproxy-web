@@ -6,7 +6,8 @@
         <mu-card v-else-if="users" style="padding: 15px 0px">
             <mu-card-title title="搜索用户" subTitle="仅被收录的" style=""></mu-card-title>
             <div>
-                <mu-table class="livetable" :selectable="false" :showCheckbox="false" :fixedHeader="false" height="400px">
+                <mu-table class="livetable" :selectable="false" :showCheckbox="false" :fixedHeader="false"
+                          :height="users.length?'400px':'70px'">
                     <mu-thead slot="header">
                         <mu-th>加入左侧</mu-th>
                         <mu-th class="mt-avatar">Avatar</mu-th>
@@ -18,11 +19,11 @@
                         <mu-th v-if="$route.query.showdate">最后更新</mu-th>
                     </mu-thead>
                     <mu-tbody>
-                        <mu-tr v-for="user,index in users" :key="index" >
-                            <mu-td >
+                        <mu-tr v-for="user,index in users" :key="index">
+                            <mu-td>
 
                                 <!--<mu-float-button icon="add" secondary mini class="demo-float-button"/>-->
-                                <mu-icon-button icon="add" class="add-b" @click="add_user(user)" ></mu-icon-button>
+                                <mu-icon-button icon="add" class="add-b" @click="add_user(user)"></mu-icon-button>
                             </mu-td>
                             <mu-td class="mt-avatar cursor-pointer" @click="goto_user(user['uid'])">
 
@@ -39,13 +40,23 @@
                             </mu-td>
                             <mu-td class="cursor-pointer" @click="goto_user(user['uid'])">{{user['uid']}}</mu-td>
                             <!--<mu-td>{{user['level']}}</mu-td>-->
-                            <mu-td  class="cursor-pointer mt-invite" @click="goto_user(user['uid'])">{{user['invite_code']}}</mu-td>
+                            <mu-td class="cursor-pointer mt-invite" @click="goto_user(user['uid'])">
+                                {{user['invite_code']}}
+                            </mu-td>
 
-                            <mu-td  v-if="$route.query.showdate">{{user['insert_date'].replace('201',"1").replace("T"," ").slice(0,-3)}}</mu-td>
+                            <mu-td v-if="$route.query.showdate">
+                                {{user['insert_date'].replace('201', "1").replace("T", " ").slice(0, -3)}}
+                            </mu-td>
 
                         </mu-tr>
                     </mu-tbody>
+
                 </mu-table>
+                <mu-card-text v-if="users.length <=0 ">
+
+                    <br>
+                    <p style="text-align: center;font-size: medium">未搜索到相应用户, 请检查是否正确接入</p>
+                </mu-card-text>
             </div>
         </mu-card>
         <mu-popup position="top" :overlay="false" popupClass="demo-popup-top" :open="topPopup">
@@ -75,7 +86,7 @@
             // 组件创建完后获取数据，
             // 此时 data 已经被 observed 了
             this.fetchData()
-            bus.$emit('setnavi',null)
+            bus.$emit('setnavi', null)
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
@@ -91,13 +102,13 @@
 
         methods: {
             goto_user(uid){
-                this.$router.push("/user/"+uid)
+                this.$router.push("/user/" + uid)
             },
             add_user(userinfo){
                 bus.$emit('add', userinfo)
-                this.topPopup=true
+                this.topPopup = true
             },
-            fetchData (reload=true) {
+            fetchData (reload = true) {
                 this.error = this.users = null;
                 reload && (this.loading = true);
                 // replace getPost with your data fetching util / API wrapper
@@ -120,7 +131,7 @@
 
             },
             getavatarsrc(unit) {
-                if ( unit&& unit['unit_id']) {
+                if (unit && unit['unit_id']) {
                     const urls = util.icon_root + unit['unit_id'] + "/" + (unit['display_rank'] - 1) + ".png";
                     return urls
                 } else {
@@ -137,9 +148,11 @@
         padding: 120px;
         text-align: center;
     }
-    .add-b{
+
+    .add-b {
         color: #424242;
     }
+
     .demo-popup-top {
         width: 100%;
         opacity: .8;
@@ -150,15 +163,18 @@
         justify-content: center;
         max-width: 375px;
     }
+
     .mu-td, .mu-th {
         padding-left: 16px;
         padding-right: 5px;
         height: 70px;
         white-space: normal;
     }
+
     .livetable {
         width: 100%;
     }
+
     .mt-avatar {
         padding-left: 1px;
         padding-right: 20px;

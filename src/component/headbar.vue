@@ -12,19 +12,20 @@
 
 
         </mu-appbar>
-        <mu-drawer :open="open" @close="toggle()" :docked="false">
+        <mu-drawer style="overflow-x: hidden" class="ban-select"  :open="open" @close="toggle()" :docked="false">
             <mu-appbar title="选项" fullwidth></mu-appbar>
 
-            <mu-menu :value="menuval">
-                <mu-menu-item style="margin-bottom: 25px" title="关于" @click="goto('/user/')"></mu-menu-item>
+            <mu-menu :value="menuval" >
+                <mu-menu-item style="margin-bottom: 25px"  title="关于" @click="goto('/user/')"></mu-menu-item>
                 <!--<mu-menu-item title="User:同学失格/865384" @click="goto('/user/865384')"></mu-menu-item>-->
                 <!--<mu-menu-item title="User:Cimoc/5012675" @click="goto('/user/5012675')"></mu-menu-item>-->
 
                 <mu-menu-item v-for="user,index in user_list" :key="index" :title="'-> '+user.name+'/'+user.uid"
                               @click="goto('/user/'+user.uid)"></mu-menu-item>
                 <mu-menu-item title="清除账号" @click="cleancookie()"></mu-menu-item>
-                <mu-menu-item style="margin-top: 25px" title="关闭侧栏" @click="toggle()"></mu-menu-item>
-                <mu-menu-item style="" :title="'切换主题 - '+theme.toUpperCase()" @click="switchtheme()"></mu-menu-item>
+                <!--<mu-menu-item style="margin-top: 25px" title="关闭侧栏" @click="toggle()"></mu-menu-item>-->
+                <mu-menu-item style="margin-top: 25px" :title="'切换主题 - '+theme"
+                              @click="switchtheme()"></mu-menu-item>
 
             </mu-menu>
 
@@ -38,10 +39,12 @@
     import bus from '../bus.js'
     import Cookies from 'js-cookie'
     import util from '../util.js'
-    import light from '!raw-loader!muse-ui/dist/theme-default.min.css'
+    import light from '!raw-loader!less-loader!../themes/light.less'
     //    import dark from '!raw-loader!muse-ui/dist/theme-dark.min.css'
     import carbon from '!raw-loader!muse-ui/dist/theme-carbon.min.css'
-    import teal from '!raw-loader!muse-ui/dist/theme-teal.min.css'
+    import teal from '!raw-loader!less-loader!../themes/teal.less'
+    import aqours from '!raw-loader!less-loader!../themes/aqours.less'
+    import muse from '!raw-loader!less-loader!../themes/muse.less'
     export default {
         data () {
             return {
@@ -52,12 +55,13 @@
                 savedlist: null,
                 user_list: {},
                 avatar_unit: null,
-                theme:null,
+                theme: null,
                 themes: {
-                    carbon,
-                    light,
-//                    dark,
-                    teal
+                    'CARBON': carbon,
+                    "μ's": muse,
+                    'LIGHT': light,
+                    'Aqours': aqours,
+                    'TEAL': teal
 
 
                 },
@@ -149,15 +153,15 @@
                 axios.get(util.api_server + 'llproxy/userSearch/', {
                     params: {
                         keyword: vm.val,
-                        limit: 8
+                        limit: 4
                     }
                 })
                     .then(function (response) {
                         const res = [];
                         for (const x of response.data['result']) {
                             isContains(x['name'], vm.val) ? res.push(x['name']) : false;
-                            isContains(x['uid'].toString(), vm.val) ? res.push(x['uid'].toString()) : false;
-                            isContains('' + x['invite_code'], vm.val) ? res.push(x['invite_code']) : false
+//                            isContains(x['uid'].toString(), vm.val) ? res.push(x['uid'].toString()) : false;
+//                            isContains('' + x['invite_code'], vm.val) ? res.push(x['invite_code']) : false
 
                         }
                         vm.dataSource = res
@@ -174,18 +178,18 @@
                     return util.asset_root + "assets/image/ui/common/com_win_22.png"
                 }
             },
-            switchtheme(hold=false){
+            switchtheme(hold = false){
                 let tid = parseInt(localStorage.getItem('pll-theme'))
-                const tlist = ['carbon', 'light', 'teal']
-                if (tid <= 2 && tid >= 0) {
+                const tlist = ['CARBON', 'LIGHT', 'TEAL',"μ's", 'Aqours']
+                if (tid < tlist.length && tid >= 0) {
 
                 } else {
                     tid = 0
                 }
-                if(!hold) tid = (tid + 1) % 3;
+                if (!hold) tid = (tid + 1) % tlist.length;
                 this.changeTheme(tlist[tid])
-                localStorage.setItem('pll-theme',tid)
-                console.log(tid)
+                localStorage.setItem('pll-theme', tid)
+//                console.log(tid)
 
             },
             changeTheme (theme) {
@@ -267,7 +271,14 @@
     .appbar-avatar {
 
     }
+    .ban-select{
+        -moz-user-select:none;/*火狐*/
 
+        -webkit-user-select:none;/*webkit浏览器*/
+
+        -ms-user-select:none;/*IE10*/
+        user-select:none;
+    }
     .iconcl {
         margin: 0;
         padding: 0;

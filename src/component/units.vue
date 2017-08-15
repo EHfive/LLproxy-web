@@ -12,21 +12,24 @@
 
             <mu-card-text>
                 <a :href="'https://llsif.sokka.cn/other/unitsExportUTF16/?uid='+$route.params.id"
-                   :download="$route.params.id+'.666'" style="margin-right: 15px">
+                   :download="$route.params.id+'.666'">
                     <mu-raised-button icon="import_export" labelPosition="before" secondary
-                                      label="导出至LL组卡器"></mu-raised-button>
+                                      label="导出至LL组卡器" style="margin-right: 15px;margin-bottom: 5px"></mu-raised-button>
                 </a>
-                <mu-raised-button style="margin-right: 15px" icon="import_export" labelPosition="before" secondary
+                <mu-raised-button style="margin-right: 15px;margin-bottom: 5px" icon="import_export"
+                                  labelPosition="before" secondary
                                   label="JSON文本"
                                   @click="dialog=true"></mu-raised-button>
 
 
                 <a :href="url" v-if="isAppleD() || loadingframe" target="_blank">
-                    <mu-raised-button style="margin-right: 15px" icon="import_export" labelPosition="before" secondary
+                    <mu-raised-button style="margin-right: 15px;margin-bottom: 5px" icon="import_export"
+                                      labelPosition="before" secondary
                                       label="导出至LLSIF - AutoTeamBuilder"
                     ></mu-raised-button>
                 </a>
-                <mu-raised-button v-else="" style="margin-right: 15px" icon="import_export" labelPosition="before"
+                <mu-raised-button v-else="" style="margin-right: 15px;margin-bottom: 5px" icon="import_export"
+                                  labelPosition="before"
                                   secondary
                                   label="导出至LLSIF - AutoTeamBuilder" @click="export_team_builder()"
                                   :disabled="loadingframe"
@@ -165,8 +168,8 @@
 
         methods: {
             isAppleD(){
-                const matchs = [/Apple/ig,/Safari/ig,/Edge/ig,/Trident/ig,/Opera/ig];
-                for(const match of matchs){
+                const matchs = [/Apple/ig, /Safari/ig, /Edge/ig, /Trident/ig, /Opera/ig];
+                for (const match of matchs) {
                     if (navigator.userAgent.match(match)) return true
                 }
                 return false

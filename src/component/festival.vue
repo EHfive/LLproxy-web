@@ -76,7 +76,7 @@
                 <mu-card-actions>
                     <!--<mu-flat-button label="Action 1"/>-->
                     <!--<mu-flat-button label="Action 2"/>-->
-                    <mu-pagination :total="count" :current="page" @pageChange="handlepage"
+                    <mu-pagination style="margin: 10px 0" :total="count" :current="page" @pageChange="handlepage"
                                    :defaultPageSize="limit">
                     </mu-pagination>
                 </mu-card-actions>
