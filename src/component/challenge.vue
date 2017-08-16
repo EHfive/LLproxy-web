@@ -28,9 +28,10 @@
                     <mu-table class="livetable" :selectable="false" :showCheckbox="false" :fixedHeader="false"
                               height="560px">
                         <mu-thead slot="header" class="tbth">
-                            <mu-th class="wtround">序号</mu-th>
-                            <mu-th class="wtmap">Maps</mu-th>
-                            <mu-th class="wtcover">Datetime</mu-th>
+                            <mu-th style="width: 30px">序号</mu-th>
+                            <mu-th style="width: 30px">活动pt</mu-th>
+                            <mu-th style="width: 200px">Maps</mu-th>
+                            <mu-th style="width: 60px">Datetime</mu-th>
                         </mu-thead>
                         <mu-tbody>
                             <mu-tr v-for="pair,index in pairs" :key="index">
@@ -38,8 +39,11 @@
                                        @click="goto_live(pair['pair_id'],null)">
                                     {{pair['pair_id']}}
                                 </mu-td>
-                                <mu-td  style="text-align: left">
-                                    <template v-for="i in pair.curr_round" >
+                                <mu-td>
+                                    {{pair['event_point']}}
+                                </mu-td>
+                                <mu-td class="challcovers">
+                                    <template v-for="i in pair.curr_round">
                                         <img style="margin-right: 15px;max-width: 65px"
                                              @click="goto_live(pair['pair_id'],i)"
                                              v-show="pair.round_setids[i-1]"
@@ -85,6 +89,29 @@
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
                             {{eventview.total_exp_gain}}
+                        </mu-flexbox-item>
+                    </mu-flexbox>
+                    <br>
+                    <mu-flexbox>
+
+                        <mu-flexbox-item class="flex-demo">
+                            获得 EXP :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.total_player_exp}}
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item class="flex-demo">
+                            获得 G :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.total_game_coin}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+
                         </mu-flexbox-item>
                     </mu-flexbox>
                     <br>
@@ -245,18 +272,51 @@
                     </mu-pagination>
                 </mu-card-actions>
             </div>
-            <mu-card-actions v-if="activeTab === 'info'" style="margin-left: 20px">
+            <mu-card-actions v-if="activeTab === 'info'&& feslive" style="margin-left: 20px">
                 <mu-flat-button label="Newer" style="margin-right: 20px" @click="handleNew()"/>
 
                 <mu-flat-button style="margin-right: 20px" label="Forward" @click="handleForward()"/>
                 <mu-flat-button :label="'组 '+feslive.pair_id" @click="handleInfo()"/>
             </mu-card-actions>
             <div v-if="activeTab === 'info' && feslive">
-                <mu-card-text style="padding: 0 12px;">
-                    <round-shower  :roundin="cround" :maps="maps" :lives="feslive.lives" :pair="feslive.pair_id+''+(cround?cround:'')"
+                <mu-card-text style="padding: 0 8px;">
+                    <round-shower :roundin="cround" :maps="maps" :lives="feslive.lives"
+                                  :pair="feslive.pair_id+''+(cround?cround:'')"
                                   :showmax="5" :showbox="feslive.round_setids"></round-shower>
 
-                    <mu-table style="margin-top: 5px">
+                    <mu-content-block style="padding: 10px;text-align: center">
+                        <mu-row gutter="" style="margin-bottom: 15px">
+                            <mu-col width="100" tablet="30" desktop="30">
+                                <span style="margin-right: 20px">累计 活动pt:</span>
+                                <span>{{feslive.event_point}}</span>
+                            </mu-col>
+                            <mu-col width="100" tablet="30" desktop="30">
+                                <span style="margin-right: 20px">累计 获得LP :</span>
+                                <span>{{feslive.lp_add}}</span>
+                            </mu-col>
+                            <mu-col width="100" tablet="30" desktop="30">
+                                <span style="margin-right: 20px">累计 EXP /G :</span>
+                                <span>{{feslive.player_exp}} /{{feslive.game_coin}}</span>
+                            </mu-col>
+                        </mu-row>
+                        <mu-row gutter="">
+                            <mu-col width="100" tablet="30" desktop="30">
+                                <span style="margin-right: 20px">金 /银 /铜</span>
+                                <span>{{feslive.rarity_3_cnt}} /{{feslive.rarity_2_cnt}} /{{feslive.rarity_1_cnt}}</span>
+                            </mu-col>
+                            <template v-if="feslive.reward_item_list">
+                                <mu-col width="100" tablet="30" desktop="30">
+                                    <span style="margin-right: 20px">{{feslive.curr_round}}轮 活动pt:</span>
+                                    <span>{{feslive.added_event_point}}</span>
+                                </mu-col>
+                                <mu-col width="100" tablet="30" desktop="30">
+                                    <span style="margin-right: 20px">{{feslive.curr_round}}轮 后总活动pt:</span>
+                                    <span>{{feslive.after_event_point}}</span>
+                                </mu-col>
+                            </template>
+                        </mu-row>
+                    </mu-content-block>
+                    <mu-table style="margin-top: 5px" v-if="feslive.reward_item_list">
                         <mu-tr>
                             <mu-td v-for="val,k in feslive.reward_item_list" :key="k"
                                    style="text-align: center;width: 100px">
@@ -294,6 +354,7 @@
     import bus from '../bus.js'
     import util from '../util.js'
     import roundshower from './tiny/round-shower.vue'
+    import livecover from './tiny/live-cover.vue'
     export default {
         data(){
             return {
@@ -314,7 +375,7 @@
                 error: null,
                 maps: null,
                 sltevent: 0,
-                activeTab: 'pair',
+                activeTab: 'info',
                 eventview: null,
                 eventlist: [
                     {
@@ -595,7 +656,8 @@
 
         },
         components: {
-            'round-shower': roundshower
+            'round-shower': roundshower,
+            'live-cover': livecover
         }
     }
 </script>
@@ -641,7 +703,7 @@
     }
 
     .wtmap {
-        width: 150px;
+        width: 250px;
     }
 
     .wtcover {
@@ -670,5 +732,8 @@
 
     .cursor-pointer {
         cursor: pointer;
+    }
+    .challcovers {
+        text-align: left;
     }
 </style>

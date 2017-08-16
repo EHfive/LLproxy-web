@@ -45,9 +45,9 @@
                 </mu-table>
             </div>
             <mu-row gutter>
-                <mu-col width="100" tablet="35" desktop="35" style="text-align: center">
-                    <img style="width: 100%" :src="getlive_iconsrc(lives[round-1].live_setting_id)" alt="">
-
+                <mu-col width="100" tablet="35" desktop="35" >
+                    <live-cover :key="pair+''+round" :randomlive="lives[round-1].is_random != 0" :attr="getmapattrid(lives[round-1].live_setting_id)"   :src="getlive_iconsrc(lives[round-1].live_setting_id)" >
+                    </live-cover>
                 </mu-col>
                 <mu-col width="100" tablet="65" desktop="60">
                     <p style="text-align: center">
@@ -105,6 +105,7 @@
 
 <script>
     import util from '../../util.js'
+    import livecover from './live-cover.vue'
     export default {
         data () {
             return {
@@ -200,6 +201,13 @@
                 }
                 return null
             },
+            getmapattrid(live_id){
+                if (this.maps && this.maps[live_id]) {
+
+                    return this.maps[live_id].attribute_icon_id;
+                }
+                return null
+            },
             raw_file(path){
                 const hosts = util.asset_root
                 return hosts + path
@@ -210,6 +218,9 @@
             transrank(rank){
                 return ['S', 'A', 'B', 'C', '-'][parseInt(rank) - 1]
             }
+        },
+        components: {
+            'live-cover': livecover
         }
     }
 </script>

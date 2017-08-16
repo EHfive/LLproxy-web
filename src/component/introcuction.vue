@@ -8,9 +8,9 @@
             <mu-divider shallowInset></mu-divider>
 
 
-            <!--<mu-card-text>-->
-                <!--<p style="color: red">关于 8/2 号果限step-up招募 闪退 请在游戏中更新修复包</p>-->
-            <!--</mu-card-text>-->
+            <mu-card-text>
+                <p style="color: red">8/15 17:00炸了,原因是主机商封了游戏域名,现已更换服务器,恢复服务,dns未变更</p>
+            </mu-card-text>
 
             <mu-card-title title="这是什么?" subTitle=" LLproxy"/>
             <mu-card-text>
@@ -33,7 +33,7 @@
 
                 <span class="mt8">然后就可以在右上的搜索框搜到自己了</span><br><br>
                 <span class="mt8">仍然不行请试试 <a target="_blank" href="http://cos.sokka.cn//apk/DNS_Changer.apk">DNS Changer(安卓)</a>, <a target="_blank" href="https://itunes.apple.com/cn/app/dns-override/id1060830093?mt=8">DNS Override(IOS) 功能收费</a></span>
-                <br><span class="mt8">如果有条件改hosts 请加群咨询 IP-主机名</span>
+                <br><span class="mt8">hosts: 106.14.214.181 prod.game1.ll.sdo.com</span>
                 <br>
                 <!--<span><a class="link" href="https://llsif.sokka.cn/llproxy/ca.crt">预备的CA证书 目前版本无需</a></span>-->
             </mu-card-text>

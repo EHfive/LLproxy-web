@@ -125,7 +125,7 @@
                     <mu-table style="width: 100%">
                         <mu-tr>
                             <mu-td v-for="val,k in feslive.song_set_ids" :key="k" style="text-align: center">
-                                <img :src="getlive_iconsrc(val)" class="img-responsive">
+                                <live-cover :sisSize="45" :attr="getmapattrid(val)"  :src="getlive_iconsrc(val)" class="img-responsive"></live-cover>
                             </mu-td>
                         </mu-tr>
                         <mu-tr>
@@ -237,7 +237,7 @@
                 <mu-table style="width: 100%">
                     <mu-tr>
                         <mu-td v-for="val,k in weight.song_set_ids" :key="k" style="text-align: center">
-                            <img :src="getlive_iconsrc(val)" class="img-responsive">
+                            <live-cover :sisSize="45" :attr="getmapattrid(val)" :src="getlive_iconsrc(val)" class="img-responsive"></live-cover>
                         </mu-td>
                     </mu-tr>
                     <mu-tr>
@@ -424,7 +424,7 @@
     import axios from 'axios'
     import bus from '../bus.js'
     import util from '../util.js'
-
+    import livecover from './tiny/live-cover.vue'
     export default {
         data(){
             return {
@@ -666,6 +666,13 @@
                 }
                 return null
             },
+            getmapattrid(live_id){
+                if (this.maps && this.maps[live_id]) {
+
+                    return this.maps[live_id].attribute_icon_id;
+                }
+                return null
+            },
             getpercent(live) {
                 const p = live['perfect_cnt']
                 const combo_all = live['perfect_cnt'] + live['great_cnt'] + live['good_cnt'] + live['miss_cnt'] + live['bad_cnt']
@@ -690,6 +697,9 @@
                 return false
             }
 
+        },
+        components: {
+            'live-cover': livecover
         }
     }
 </script>
@@ -787,8 +797,8 @@
 
     .img-responsive {
         display: inline-block;
-        height: auto;
-        max-width: 100%;
-        max-height: 250px;
+        /*height: auto;*/
+        /*max-width: 100%;*/
+        /*max-height: 250px;*/
     }
 </style>

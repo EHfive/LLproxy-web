@@ -25,6 +25,7 @@
                 }
             }
         },
+
         created(){
             bus.$on("changetheme", (id) => {
                 console.log(id)
@@ -43,7 +44,7 @@
                         break;
                     default: {
                         this.changeTheme('carbon');
-                        id=3
+                        id = 3
                     }
                 }
                 localStorage.setItem('pll-theme', id % 4)

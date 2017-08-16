@@ -220,7 +220,7 @@
             },
             exportdeck(llhelper = false){
                 if (llhelper) {
-                    const llhelper = this.export_deck.llhelperString;
+                    const llhelper = decodeURIComponent(this.export_deck.llhelperString);
                     download(llhelper, this.decks[this.sltdeck].deck_name + '.sd', 'text/plain');
                 } else {
                     this.dialog = true
