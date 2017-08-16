@@ -42,7 +42,7 @@
                                 <mu-td>
                                     {{pair['event_point']}}
                                 </mu-td>
-                                <mu-td class="challcovers">
+                                <mu-td style="text-align: left">
                                     <template v-for="i in pair.curr_round">
                                         <img style="margin-right: 15px;max-width: 65px"
                                              @click="goto_live(pair['pair_id'],i)"
@@ -355,6 +355,7 @@
     import util from '../util.js'
     import roundshower from './tiny/round-shower.vue'
     import livecover from './tiny/live-cover.vue'
+    const localkey = 'challenge_tab';
     export default {
         data(){
             return {
@@ -375,7 +376,7 @@
                 error: null,
                 maps: null,
                 sltevent: 0,
-                activeTab: 'info',
+                activeTab: util.getkey(localkey) || 'info',
                 eventview: null,
                 eventlist: [
                     {
@@ -451,7 +452,8 @@
                 this.fetchLive();
             },
             handleTabChange (val) {
-                this.activeTab = val
+                this.activeTab = val;
+                util.setkey(localkey,val)
             },
             handleActive () {
                 window.alert('tab active')
@@ -733,6 +735,7 @@
     .cursor-pointer {
         cursor: pointer;
     }
+
     .challcovers {
         text-align: left;
     }

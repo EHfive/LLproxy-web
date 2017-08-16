@@ -125,7 +125,8 @@
                     <mu-table style="width: 100%">
                         <mu-tr>
                             <mu-td v-for="val,k in feslive.song_set_ids" :key="k" style="text-align: center">
-                                <live-cover :sisSize="45" :attr="getmapattrid(val)"  :src="getlive_iconsrc(val)" class="img-responsive"></live-cover>
+                                <live-cover :sisSize="45" :attr="getmapattrid(val)" :src="getlive_iconsrc(val)"
+                                            class="img-responsive"></live-cover>
                             </mu-td>
                         </mu-tr>
                         <mu-tr>
@@ -237,7 +238,8 @@
                 <mu-table style="width: 100%">
                     <mu-tr>
                         <mu-td v-for="val,k in weight.song_set_ids" :key="k" style="text-align: center">
-                            <live-cover :sisSize="45" :attr="getmapattrid(val)" :src="getlive_iconsrc(val)" class="img-responsive"></live-cover>
+                            <live-cover :sisSize="45" :attr="getmapattrid(val)" :src="getlive_iconsrc(val)"
+                                        class="img-responsive"></live-cover>
                         </mu-td>
                     </mu-tr>
                     <mu-tr>
@@ -425,6 +427,7 @@
     import bus from '../bus.js'
     import util from '../util.js'
     import livecover from './tiny/live-cover.vue'
+    const localkey = 'festival_tab';
     export default {
         data(){
             return {
@@ -441,7 +444,7 @@
                 sltevent: 0,
                 feslive: null,
                 weight: null,
-                activeTab: 'info',
+                activeTab: util.getkey(localkey) || 'info',
 //                activeTab: this.$route.query.pairid && this.$route.query.eventid ? 'info' : 'log',
                 eventview: null,
                 eventlist: [
@@ -465,7 +468,7 @@
         created () {
             // 组件创建完后获取数据，
             // 此时 data 已经被 observed 了
-            this.fetchMap()
+            this.fetchMap();
             for (const x in this.eventlist) {
                 this.sltevent = this.eventlist[x].event_id;
                 if (Date.now() / 1000 >= (this.eventlist[x].end.timestamp )) {
@@ -476,14 +479,10 @@
                 }
 
             }
-            if (this.$route.query.eventid) this.sltevent = this.$route.query.eventid
-            this.pair_id = -1
-//            this.fetchLive()
-//            this.fetchData(true)
-//
-//            this.fetchWeight()
+            if (this.$route.query.eventid) this.sltevent = this.$route.query.eventid;
+            this.pair_id = -1;
             bus.$on('refresh', () => {
-                this.fetchLive()
+                this.fetchLive();
                 this.fetchData(true)
 
             })
@@ -500,22 +499,22 @@
 
         methods: {
             changept(){
-                this.page = 1
-                this.fetchLive()
-                this.fetchWeight()
+                this.page = 1;
+                this.fetchLive();
+                this.fetchWeight();
                 this.fetchData(true)
             },
             handleNew(){
                 if (this.pair_id === -1 || this.pair_id === this.last_pair_id) this.fetchLive();
                 else {
-                    if (this.feslive || this.pair_id <= this.last_pair_id) this.pair_id += 1
+                    if (this.feslive || this.pair_id <= this.last_pair_id) this.pair_id += 1;
                     else this.pair_id = -1
                 }
 
             },
             handleForward(){
                 if (!this.feslive && this.pair_id > this.last_pair_id) {
-                    this.pair_id = -1
+                    this.pair_id = -1;
                     return
                 }
                 if (this.pair_id === -1) this.pair_id = this.feslive.pair_id - 1;
@@ -525,7 +524,8 @@
             },
             handleTabChange (val) {
 
-                this.activeTab = val
+                this.activeTab = val;
+                util.setkey(localkey,val)
 
             },
             handleLog(){
@@ -542,22 +542,22 @@
                 this.fetchLive();
             },
             goto_live(pairid){
-                this.pair_id = pairid
-                this.activeTab = 'info'
+                this.pair_id = pairid;
+                this.activeTab = 'info';
                 this.fetchLive()
             },
             handlepage (newIndex) {
-                this.page = newIndex
-                this.fetchData(false)
+                this.page = newIndex;
+                this.fetchData(false);
                 document.getElementsByClassName('mu-table')[0].parentElement.scrollTop = 0
             },
             fetchMap (reload = true){
                 reload && (this.loadingmap = true);
                 const vm = this;
-                const map_url = util.live_map
+                const map_url = util.live_map;
                 axios.get(map_url)
                     .then(function (response) {
-                        vm.maps = response.data
+                        vm.maps = response.data;
                         reload && (vm.loadingmap = false);
                     })
                     .catch(function (err) {
@@ -584,7 +584,24 @@
                         vm.lives = response.data['result']['lives'];
                         vm.page = response.data['result']['curr_page'];
                         vm.limit = response.data['result']['limit'];
-                        vm.count = response.data['result']['count']
+                        vm.count = response.data['result']['count'];
+                        reload && (vm.loadingapi = false);
+                    })
+                    .catch(function (err) {
+                        vm.error = err.toString();
+                        console.log(err)
+
+                    });
+
+                axios.get(util.api_server + 'llproxy/eventFestivalView/', {
+                    params: {
+                        uid: vm.$route.params.id,
+                        eventid: vm.$route.query.eventid || vm.sltevent || null,
+                    }
+                })
+                    .then(function (response) {
+
+                        vm.eventview = response.data.result;
                         reload && (vm.loadingapi = false);
                     })
                     .catch(function (err) {
@@ -592,23 +609,6 @@
                         console.log(err)
 
                     })
-
-                 axios.get(util.api_server + 'llproxy/eventFestivalView/', {
-                 params: {
-                 uid: vm.$route.params.id,
-                 eventid: vm.$route.query.eventid || vm.sltevent || null,
-                 }
-                 })
-                 .then(function (response) {
-
-                 vm.eventview = response.data.result;
-                 reload && (vm.loadingapi = false);
-                 })
-                 .catch(function (err) {
-                 vm.error = err.toString();
-                 console.log(err)
-
-                 })
 
             },
             fetchLive(){
@@ -649,7 +649,7 @@
                     })
             },
             getlive_iconsrc(live_id, track_id, mgd = 2) {
-                const hosts = util.asset_root
+                const hosts = util.asset_root;
                 if (this.maps && this.maps['' + live_id]) {
 
                     return hosts + this.maps['' + live_id]['live_icon_asset']
@@ -661,7 +661,7 @@
             getmapname(live_id, diff = false) {
                 if (this.maps && this.maps['' + live_id]) {
 
-                    const i = this.maps['' + live_id]
+                    const i = this.maps['' + live_id];
                     return i['name'] + (diff ? ' [' + i['difficulty_text'] + ']' : '')
                 }
                 return null
@@ -674,8 +674,8 @@
                 return null
             },
             getpercent(live) {
-                const p = live['perfect_cnt']
-                const combo_all = live['perfect_cnt'] + live['great_cnt'] + live['good_cnt'] + live['miss_cnt'] + live['bad_cnt']
+                const p = live['perfect_cnt'];
+                const combo_all = live['perfect_cnt'] + live['great_cnt'] + live['good_cnt'] + live['miss_cnt'] + live['bad_cnt'];
                 return (Math.round(p / combo_all * 1000) / 10.0 + "%")
             },
             getavatarsrc(unit_id) {
@@ -687,7 +687,7 @@
                 }
             },
             raw_file(path){
-                const hosts = util.asset_root
+                const hosts = util.asset_root;
                 return hosts + path
             },
             list_or(list){

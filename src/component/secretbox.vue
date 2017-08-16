@@ -24,11 +24,11 @@
 
                         </mu-th>
 
-                            <template v-if="!bypt">
-                                <mu-th>UR</mu-th>
-                                <mu-th>SSR</mu-th>
-                                <mu-th>SR</mu-th>
-                            </template>
+                        <template v-if="!bypt">
+                            <mu-th>UR</mu-th>
+                            <mu-th>SSR</mu-th>
+                            <mu-th>SR</mu-th>
+                        </template>
 
                         <mu-th>R</mu-th>
                         <mu-th v-if="bypt">N</mu-th>
@@ -38,14 +38,15 @@
                         <mu-tr v-for="log,index in logs" :key="index" :class="bypt?'':'tr-notbypt'">
                             <mu-td class="wtcardpool ht60">
                                 <span style="font-size: 115%;">{{log.name}}</span>
-                                <br><span style="font-size: 85%">{{ log['update_time'].replace(new Date().getFullYear()+'-',"").replace('201',"1").replace("T"," ").slice(0, -3)}}</span>
+                                <br><span
+                                    style="font-size: 85%">{{ log['update_time'].replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ").slice(0, -3)}}</span>
                             </mu-td>
 
-                                <template v-if="!bypt">
-                                    <mu-td class="ht60">{{log['ur_cnt']}}</mu-td>
-                                    <mu-td class="ht60">{{log['ssr_cnt']}}</mu-td>
-                                    <mu-td class="ht60">{{log['sr_cnt']}}</mu-td>
-                                </template>
+                            <template v-if="!bypt">
+                                <mu-td class="ht60">{{log['ur_cnt']}}</mu-td>
+                                <mu-td class="ht60">{{log['ssr_cnt']}}</mu-td>
+                                <mu-td class="ht60">{{log['sr_cnt']}}</mu-td>
+                            </template>
 
                             <mu-td class="ht60">{{log['r_cnt']}}</mu-td>
                             <mu-td class="ht60" v-if="bypt">{{log['n_cnt']}}</mu-td>
@@ -72,7 +73,8 @@
     import axios from 'axios'
     import bus from '../bus.js'
     import util from '../util.js'
-
+    const showrkey = "secretbox_showr";
+    const notshownkey = "secretbox_notshown";
     export default {
         data(){
             return {
@@ -83,14 +85,14 @@
                 count: null,
                 error: null,
                 bypt: false,
-                showr: false,
-                notshown: false
+                showr: util.getkey(showrkey) || false,
+                notshown: util.getkey(notshownkey) || false
             }
         },
         created () {
             // 组件创建完后获取数据，
             // 此时 data 已经被 observed 了
-            this.fetchData()
+            this.fetchData();
             bus.$on('refresh', () => {
 
                 this.fetchData()
@@ -100,17 +102,25 @@
         watch: {
             // 如果路由有变化，会再次执行该方法
             '$route': 'fetchData',
-            'bypt': 'changept'
+            'bypt': 'changept',
+            'showr': 'handleshowr',
+            'notshown': 'handlenotshown'
         },
 
         methods: {
             handlepage (newIndex) {
-                this.page = newIndex
-                this.fetchData(false)
+                this.page = newIndex;
+                this.fetchData(false);
                 document.getElementsByClassName('mu-table')[1].parentElement.scrollTop = 0
             },
+            handleshowr (){
+                util.setkey(showrkey, this.showr)
+            },
+            handlenotshown (){
+                util.setkey(notshownkey, this.notshown)
+            },
             changept(){
-                this.page = 1
+                this.page = 1;
                 this.fetchData(false)
             },
             fetchData (reload = true) {
@@ -177,9 +187,11 @@
         }
 
     }
+
     .tr-notbypt {
         height: 65px;
     }
+
     .livetable {
         width: auto;
     }
@@ -187,9 +199,11 @@
     .wtcardpool {
         width: 20%;
     }
+
     .ht60 {
-        height: 60px ;
+        height: 60px;
     }
+
     .wtavatar {
         width: 40%;
         text-align: left;
@@ -199,9 +213,11 @@
         width: 50%;
         text-align: left;
     }
+
     .fade-enter-active, .fade-leave-active {
         transition: opacity .5s
     }
+
     .fade-enter, .fade-leave-active {
         opacity: 0
     }

@@ -75,7 +75,7 @@
     import axios from 'axios'
     import bus from '../bus.js'
     import util from '../util.js'
-
+    const shownormalkey = 'marathon_shownormal';
     export default {
         data(){
             return {
@@ -87,7 +87,7 @@
                 count: null,
                 error: null,
                 maps: null,
-                shownormal: false,
+                shownormal: util.getkey(shownormalkey) || false,
                 sltevent: 0,
                 eventlist: [
                     {
@@ -189,8 +189,9 @@
 
         methods: {
             changept(){
-                this.page = 1
-                this.fetchData(false)
+                this.page = 1;
+                this.fetchData(false);
+                util.setkey(shownormalkey, this.shownormal)
             },
             goto_live(eventid){
                 this.$router.push({
