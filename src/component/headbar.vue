@@ -68,7 +68,7 @@
             }
         },
         created () {
-            this.switchtheme(true)
+            this.switchtheme(true);
             this.defaultlist = {
                 '865384': {
                     uid: 865384,
@@ -105,7 +105,7 @@
                     Cookies.set('userlist', this.user_list, {expires: 365})
                 }
                 this.avatar_unit = userinfo.navi_unit_info
-            })
+            });
             bus.$on('setnavi', (avatar_unit) => {
                 this.avatar_unit = avatar_unit;
             })
@@ -179,32 +179,32 @@
                 }
             },
             switchtheme(hold = false){
-                let tid = parseInt(localStorage.getItem('pll-theme'))
-                const tlist = ['CARBON', 'LIGHT', 'TEAL',"μ's", 'Aqours']
+                let tid = parseInt(localStorage.getItem('pll-theme'));
+                const tlist = ['CARBON', 'LIGHT', 'TEAL',"μ's", 'Aqours'];
                 if (tid < tlist.length && tid >= 0) {
 
                 } else {
-                    tid = 0
+                    tid = 2 % tlist.length
                 }
                 if (!hold) tid = (tid + 1) % tlist.length;
-                this.changeTheme(tlist[tid])
+                this.changeTheme(tlist[tid]);
                 localStorage.setItem('pll-theme', tid)
 //                console.log(tid)
 
             },
             changeTheme (theme) {
-                this.theme = theme
-                const styleEl = this.getThemeStyle()
+                this.theme = theme;
+                const styleEl = this.getThemeStyle();
                 styleEl.innerHTML = this.themes[theme] || ''
 
             },
             getThemeStyle () {
-                const themeId = 'muse-theme'
-                let styleEl = document.getElementById(themeId)
-                if (styleEl) return styleEl
-                styleEl = document.createElement('style')
-                styleEl.id = themeId
-                document.body.appendChild(styleEl)
+                const themeId = 'muse-theme';
+                let styleEl = document.getElementById(themeId);
+                if (styleEl) return styleEl;
+                styleEl = document.createElement('style');
+                styleEl.id = themeId;
+                document.body.appendChild(styleEl);
                 return styleEl
             }
 

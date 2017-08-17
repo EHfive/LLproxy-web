@@ -37,8 +37,7 @@
             },
             attr: {},
             sisSize: {
-                type: Number,
-                "default": 50
+                type: Number
             }
 
         },
@@ -105,15 +104,13 @@
 <style>
     .auto-img {
         width: 100%;
-        height: auto;
+        height: 100%;
         max-width: 100%;
         display: block;
     }
 
     .inline-demo {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        /*display: block;*/
         /*overflow-x: auto;*/
     }
 

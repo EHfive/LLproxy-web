@@ -1,6 +1,9 @@
 <template>
     <div>
-        <mu-card class="loading" v-if="loadingmap || loadingapi">
+        <mu-card class="loading" v-if="error">
+            <p>获取数据失败,请重试或刷新</p>
+        </mu-card>
+        <mu-card class="loading" v-else-if="loadingmap || loadingapi || loadingevent">
             <mu-circular-progress :size="120" :strokeWidth="7"/>
         </mu-card>
 
@@ -124,8 +127,8 @@
                     <br>
                     <mu-table style="width: 100%">
                         <mu-tr>
-                            <mu-td v-for="val,k in feslive.song_set_ids" :key="k" style="text-align: center">
-                                <live-cover :sisSize="45" :attr="getmapattrid(val)" :src="getlive_iconsrc(val)"
+                            <mu-td v-for="val,k in feslive.song_set_ids" :key="k" style="text-align: center;min-height: 250px">
+                                <live-cover :sisSize="48" :attr="getmapattrid(val)" :src="getlive_iconsrc(val)"
                                             class="img-responsive"></live-cover>
                             </mu-td>
                         </mu-tr>
@@ -433,6 +436,7 @@
             return {
                 loadingmap: true,
                 loadingapi: false,
+                loadingevent: true,
                 lives: null,
                 page: 1,
                 limit: 10,
@@ -468,17 +472,17 @@
         created () {
             // 组件创建完后获取数据，
             // 此时 data 已经被 observed 了
+            const vm = this;
+            this.loadingevent = true;
+            util.eventlistPromise(3).then(function (result) {
+                vm.eventlist = result.event_list;
+                vm.sltevent = result.sltevent;
+                vm.loadingevent=false
+            }).catch(function () {
+                vm.sltevent = util.selectevent(vm.eventlist);
+                vm.loadingevent=false
+            });
             this.fetchMap();
-            for (const x in this.eventlist) {
-                this.sltevent = this.eventlist[x].event_id;
-                if (Date.now() / 1000 >= (this.eventlist[x].end.timestamp )) {
-                    continue
-                }
-                if (Date.now() / 1000 >= (this.eventlist[x].begin.timestamp )) {
-                    break
-                }
-
-            }
             if (this.$route.query.eventid) this.sltevent = this.$route.query.eventid;
             this.pair_id = -1;
             bus.$on('refresh', () => {
@@ -797,7 +801,7 @@
 
     .img-responsive {
         display: inline-block;
-        /*height: auto;*/
+        height: auto;
         /*max-width: 100%;*/
         /*max-height: 250px;*/
     }

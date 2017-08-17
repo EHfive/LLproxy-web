@@ -1,6 +1,9 @@
 <template>
     <div>
-        <mu-card class="loading" v-if="loadingmap || loadingapi">
+        <mu-card class="loading" v-if="error">
+            <p>获取数据失败,请重试或刷新</p>
+        </mu-card>
+        <mu-card class="loading" v-else-if="loadingmap || loadingapi || loadingevent">
             <mu-circular-progress :size="120" :strokeWidth="7"/>
         </mu-card>
         <mu-card v-else-if="lives&&maps" style="padding: 15px 0px">
@@ -81,6 +84,7 @@
             return {
                 loadingmap: true,
                 loadingapi: true,
+                loadingevent: true,
                 lives: null,
                 page: 1,
                 limit: 20,
@@ -160,21 +164,21 @@
         created () {
             // 组件创建完后获取数据，
             // 此时 data 已经被 observed 了
+            const vm=this;
+            this.loadingevent = true;
+            util.eventlistPromise(1).then(function (result) {
+                vm.eventlist = result.event_list;
+                vm.sltevent = result.sltevent;
+                vm.loadingevent = false
+            }).catch(function () {
+                vm.sltevent = util.selectevent(vm.eventlist);
+                vm.loadingevent = false
+            });
             this.fetchMap()
-            for (const x in this.eventlist) {
-                this.sltevent = this.eventlist[x].event_id;
-                if (Date.now() / 1000 >= (this.eventlist[x].end.timestamp )) {
-                    continue
-                }
-                if (Date.now() / 1000 >= (this.eventlist[x].begin.timestamp )) {
-                    break
-                }
-
-            }
             this.fetchData()
             bus.$on('refresh', () => {
 
-                this.fetchData()
+                vm.fetchData()
 
             })
 
