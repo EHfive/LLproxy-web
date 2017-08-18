@@ -2,11 +2,12 @@
     <div>
 
 
-        <div v-if="error" class="error">
-            {{ error }}
-        </div>
+        <mu-card class="loading" v-if="error">
+            <p>获取数据失败, 请重试或刷新, 或者并无记录</p>
+            <pre>{{error}}</pre>
+        </mu-card>
         <mu-card class="loading" v-else-if="loadingapi">
-            <mu-circular-progress :size="120" :strokeWidth="7"/>
+            <mu-circular-progress :size="120" :strokeWidth="7" />
         </mu-card>
         <mu-card v-else-if="userinfo" style="overflow: hidden">
             <mu-card-header :title="userinfo.name" :subTitle="'Rank. '+userinfo.level">
@@ -43,7 +44,7 @@
             </mu-card-header>
             <mu-divider></mu-divider>
             <div class="content-info">
-                <mu-card-title title="一些道具" subTitle="Loveca/ Coin/ 友情pt" class="mt8"/>
+                <mu-card-title title="一些道具" subTitle="Loveca/ Coin/ 友情pt" class="mt8" />
                 <mu-card-text>
                     <mu-flexbox>
                         <mu-flexbox-item class="flex-demo">
@@ -68,9 +69,9 @@
                             {{userinfo['social_point']}}
                         </mu-flexbox-item>
 
-                        <mu-flexbox-item/>
+                        <mu-flexbox-item />
 
-                        <mu-flexbox-item/>
+                        <mu-flexbox-item />
                     </mu-flexbox>
                 </mu-card-text>
                 <mu-card-title title="基本" subTitle="" class="mt8"/>
@@ -82,7 +83,7 @@
                         <mu-flexbox-item class="flex-demo">
                             {{userinfo['user_id']}}
                         </mu-flexbox-item>
-                        <mu-flexbox-item/>
+                        <mu-flexbox-item />
 
                     </mu-flexbox>
                     <mu-flexbox class="mt8">
@@ -92,7 +93,7 @@
                         <mu-flexbox-item class="flex-demo">
                             {{userinfo['invite_code']}}
                         </mu-flexbox-item>
-                        <mu-flexbox-item/>
+                        <mu-flexbox-item />
                     </mu-flexbox>
                     <!--<mu-flexbox class="mt8">-->
                     <!--<mu-flexbox-item class="flex-demo">-->
@@ -110,7 +111,7 @@
                         <mu-flexbox-item class="flex-demo">
                             {{userinfo['insert_date'].replace("T", " ")}}
                         </mu-flexbox-item>
-                        <mu-flexbox-item/>
+                        <mu-flexbox-item />
 
                     </mu-flexbox>
                     <mu-flexbox class="mt8" v-show="false">
@@ -120,7 +121,7 @@
                         <mu-flexbox-item class="flex-demo">
                             {{userinfo['update_date'].replace("T", " ")}}
                         </mu-flexbox-item>
-                        <mu-flexbox-item/>
+                        <mu-flexbox-item />
                     </mu-flexbox>
                     <mu-flexbox class="mt8">
                         <mu-flexbox-item class="flex-demo">
@@ -129,7 +130,7 @@
                         <mu-flexbox-item class="flex-demo">
                             {{userinfo['update_time'].replace("T", " ")}}
                         </mu-flexbox-item>
-                        <mu-flexbox-item/>
+                        <mu-flexbox-item />
                     </mu-flexbox>
                 </mu-card-text>
 

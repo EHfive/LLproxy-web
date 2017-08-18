@@ -1,7 +1,7 @@
 <template>
     <div>
         <mu-card class="loading" v-if="error">
-            <p>获取数据失败,请重试或刷新</p>
+            <p>获取数据失败,请重试或刷新,或者并无记录</p>
         </mu-card>
         <mu-card class="loading" v-else-if="loadingmap || loadingapi || loadingevent">
             <mu-circular-progress :size="120" :strokeWidth="7"/>
@@ -435,7 +435,7 @@
         data(){
             return {
                 loadingmap: true,
-                loadingapi: false,
+                loadingapi: true,
                 loadingevent: true,
                 lives: null,
                 page: 1,

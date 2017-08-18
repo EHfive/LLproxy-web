@@ -52,8 +52,8 @@
                 </mu-table>
             </div>
         </mu-card>
-        <mu-bottom-sheet :open="bottomSheet" @close="closeBottomSheet">
-            <mu-list @itemClick="closeBottomSheet">
+        <mu-bottom-sheet :open="bottomSheet" @close="closeBottomSheet()">
+            <mu-list @itemClick="closeBottomSheet()">
                 <mu-sub-header>
                     请选择导出
                 </mu-sub-header>
@@ -159,21 +159,21 @@
         },
         methods: {
             onCopy: function (e) {
-                this.toast = "复制成功"
+                this.toast = "复制成功";
                 this.toastTimer = setTimeout(() => {
                     this.toast = false
-                }, 1000)
-                this.close()
+                }, 1000);
+                this.close();
                 this.export_code = null
             },
             onError: function (e) {
-                this.toast = "复制失败,请手动复制"
+                this.toast = "复制失败,请手动复制";
                 this.toastTimer = setTimeout(() => {
                     this.toast = false
                 }, 1000)
             },
             hideToast () {
-                this.toast = false
+                this.toast = false;
                 if (this.toastTimer) clearTimeout(this.toastTimer)
             },
             pad(num, n){
@@ -211,11 +211,11 @@
                     })
                     .catch(function (err) {
                         console.log(err)
-                    })
+                    });
                 this.bottomSheet = true
             },
             exportsifstatus(){
-                this.export_status = this.export_deck.sifstatusString
+                this.export_status = this.export_deck.sifstatusString;
                 this.statusdialog = true
             },
             exportdeck(llhelper = false){
@@ -232,7 +232,7 @@
                 return "http://llhelper.duapp.com/llnewunitsis?unit=" + this.export_deck.llhelperString
             },
             fetchCode(codestring){
-                const vm = this
+                const vm = this;
                 axios.post(util.api_server + 'llproxy/cardViewerCode/', {
                     info_string: codestring
                 })
@@ -245,7 +245,7 @@
                     })
             },
             close () {
-                this.dialog = false
+                this.dialog = false;
                 this.statusdialog = false
             }
 

@@ -1,6 +1,10 @@
 <template>
     <div>
-        <mu-card v-if="loadingapi || loadingmap" class="loading">
+        <mu-card class="loading" v-if="error">
+            <p>获取数据失败, 请重试或刷新, 或者并无记录</p>
+            <!--<pre>{{error}}</pre>-->
+        </mu-card>
+        <mu-card v-else-if="loadingapi || loadingmap" class="loading">
             <mu-circular-progress :size="120" :strokeWidth="7"/>
         </mu-card>
         <div v-else-if="decks">
@@ -21,7 +25,8 @@
                 loadingapi: true,
                 loadingmap: true,
                 decks: null,
-                skills: null
+                skills: null,
+                error:null
 
             }
         },

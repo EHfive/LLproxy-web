@@ -45,8 +45,10 @@
                 </mu-table>
             </div>
             <mu-row gutter>
-                <mu-col width="100" tablet="35" desktop="35" >
-                    <live-cover :key="pair+''+round" :randomlive="lives[round-1].is_random != 0" :attr="getmapattrid(lives[round-1].live_setting_id)"   :src="getlive_iconsrc(lives[round-1].live_setting_id)" >
+                <mu-col width="100" tablet="35" desktop="35">
+                    <live-cover :sisSize="48" :key="pair+''+round" :randomlive="lives[round-1].is_random != 0"
+                                :attr="getmapattrid(lives[round-1].live_setting_id)"
+                                :src="getlive_iconsrc(lives[round-1].live_setting_id)">
                     </live-cover>
                 </mu-col>
                 <mu-col width="100" tablet="65" desktop="60">
@@ -159,6 +161,7 @@
         watch: {
             'roundin': "dynround",
             'pair': "dynround",
+            'showbox': "dynround",
         },
         methods: {
             changeStep (index) {
@@ -246,9 +249,11 @@
         text-align: left;
         margin: 0 16px;
     }
+
     .ht50 {
         height: 50px;
     }
+
     .live-fc {
         background-color: rgba(253, 239, 255, 0.65);
     }

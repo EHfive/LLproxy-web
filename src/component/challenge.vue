@@ -1,7 +1,8 @@
 <template>
     <div>
         <mu-card class="loading" v-if="error">
-            <p>获取数据失败,请重试或刷新</p>
+            <p>获取数据失败, 请重试或刷新, 或者并无记录</p>
+            <!--<pre>{{error}}</pre>-->
         </mu-card>
         <mu-card class="loading" v-else-if="loadingmap || loadingapi || loadingevent">
             <mu-circular-progress :size="120" :strokeWidth="7"/>
@@ -98,23 +99,23 @@
                     <mu-flexbox>
 
                         <mu-flexbox-item class="flex-demo">
-                            获得 EXP :
+                            LIVE获得 EXP :
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
                             {{eventview.total_player_exp}}
                         </mu-flexbox-item>
 
                         <mu-flexbox-item class="flex-demo">
-                            获得 G :
+                            LIVE获得 G :
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
                             {{eventview.total_game_coin}}
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
-
+                            箱子获得 G:
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
-
+                            {{eventview.total_reward_coin}}
                         </mu-flexbox-item>
                     </mu-flexbox>
                     <br>
@@ -126,13 +127,13 @@
                             {{eventview.total_coin_cost}}
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
-                            平均Score:
+                            平均Score :
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
                             {{eventview.avg_score}}
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
-                            平均P率
+                            平均P率 :
                         </mu-flexbox-item>
                         <mu-flexbox-item class="flex-demo">
                             {{ Math.round(eventview.avg_perfect_rate * 1000) / 10.0}}%
@@ -141,6 +142,29 @@
 
                     </mu-flexbox>
                     <br>
+                    <mu-flexbox>
+                        <mu-flexbox-item class="flex-demo">
+                            组均活动pt :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.avg_pair_event_pt}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            场均活动pt :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.avg_round_event_pt}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+
+                        </mu-flexbox-item>
+
+
+                    </mu-flexbox>
+                    <br><br>
                     <mu-flexbox>
                         <mu-flexbox-item class="flex-demo">
                             <!--<img src="" alt="金箱">-->
@@ -362,7 +386,8 @@
         data(){
             return {
                 loadingmap: true,
-                loadingapi: false,
+                loadingapi: true,
+                loadingview:true,
                 loadingevent: true,
                 pairs: null,
                 pair_id: this.$route.query.pairid || -1,
@@ -415,14 +440,15 @@
         created () {
             // 组件创建完后获取数据，
             // 此时 data 已经被 observed 了
-            const vm = this;
             this.loadingevent = true;
+            const vm = this;
+
             util.eventlistPromise(4).then(function (result) {
                 vm.eventlist = result.event_list;
                 vm.sltevent = result.sltevent;
                 vm.loadingevent=false
             }).catch(function () {
-                vm.sltevent = util.selectevent(vm.eventlist)
+                vm.sltevent = util.selectevent(vm.eventlist);
                 vm.loadingevent=false
             });
             this.fetchMap();
@@ -571,6 +597,7 @@
             fetchData (reload = true) {
 
                 reload && (this.loadingapi = true);
+                reload && (this.loadingview = true);
                 const vm = this;
                 axios.get(util.api_server + 'llproxy/eventChallengePairs/', {
                     params: {
@@ -586,7 +613,7 @@
                         vm.page = response.data['result']['curr_page'];
                         vm.limit = response.data['result']['limit'];
                         vm.count = response.data['result']['count'];
-                        reload && (vm.loadingapi = false);
+                        vm.loadingapi = false;
                     })
                     .catch(function (err) {
                         vm.error = err.toString();
@@ -602,7 +629,7 @@
                     .then(function (response) {
 
                         vm.eventview = response.data.result;
-                        reload && (vm.loadingapi = false);
+                        vm.loadingview = false;
                     })
                     .catch(function (err) {
                         vm.error = err.toString();

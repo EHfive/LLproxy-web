@@ -1,6 +1,10 @@
 <template>
     <div>
-        <mu-card class="loading" v-if="loading">
+        <mu-card class="loading" v-if="error">
+            <p>获取数据失败, 请重试或刷新, 或者并无记录</p>
+            <!--<pre>{{error}}</pre>-->
+        </mu-card>
+        <mu-card class="loading" v-else-if="loading">
             <mu-circular-progress :size="120" :strokeWidth="7"/>
         </mu-card>
         <mu-card v-else-if="users" style="padding: 15px 0px">

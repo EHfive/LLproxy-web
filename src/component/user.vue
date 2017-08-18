@@ -3,7 +3,7 @@
 
     <mu-row gutter>
         <mu-col desktop="30" width="100" tablet="33" class="menus">
-            <menus msg="xxx"></menus>
+            <menus ></menus>
         </mu-col>
         <mu-col desktop="70" width="100" tablet="65">
 
