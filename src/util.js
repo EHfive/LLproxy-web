@@ -12,7 +12,7 @@ if (window.location.protocol === 'https:') {
     removable_skill_map = "http://jp-r.sokka.cn/dist/removable_skill.min.json";
     live_map = "http://jp-r.sokka.cn/dist/maps_dict.min.json";
 }
-const debug = true;
+const debug = false;
 const api_server = debug?"http://127.0.0.1:5000/":"https://llsif.sokka.cn/api/";
 
 

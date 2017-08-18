@@ -10,7 +10,7 @@
         <mu-card v-else-if="logs" style="padding: 15px 0px">
 
 
-            <mu-card-title title="Loveca LP回复" :subTitle="asc?'时间顺序':'时间倒叙'" style=""></mu-card-title>
+            <mu-card-title title="Loveca LP回复" :subTitle="asc?'时间顺序':'时间倒序'" style=""></mu-card-title>
 
             <mu-content-block style="margin-left: 10px">
                 <mu-select-field v-model="sltevent" label="选择活动" style="margin-right: 15px">

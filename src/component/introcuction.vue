@@ -8,9 +8,9 @@
             <mu-divider shallowInset></mu-divider>
 
 
-            <mu-card-text>
-                <p style="color: red">8/15 17:00炸了,原因是主机商封了游戏域名,现已更换服务器,恢复服务,dns未变更</p>
-            </mu-card-text>
+            <!--<mu-card-text>-->
+                <!--<p style="color: red">8/15 17:00炸了,原因是主机商封了游戏域名,现已更换服务器,恢复服务,dns未变更</p>-->
+            <!--</mu-card-text>-->
 
             <mu-card-title title="这是什么?" subTitle=" LLproxy"/>
             <mu-card-text>
