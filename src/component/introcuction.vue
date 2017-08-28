@@ -27,9 +27,9 @@
                <mu-card-text>
                    查看我们的文档 <a href="https://pll.sokka.cn/docs/index.html" target="_blank">LLproxy 指导</a> <br>
                    <ul >
-                       <li><a href="https://pll.sokka.cn/docs/insert/intro.html" target="_blank">接入PLL</a></li>
-                       <li><a href="https://pll.sokka.cn/docs/help/help.html" target="_blank">使用PLL</a></li>
-                       <li><a href="https://pll.sokka.cn/docs/insert/intro.html" target="_blank">接入PLL</a></li>
+                       <li><a href="https://pll.sokka.cn/docs/insert/intro.html" target="_blank">接入 PLL</a></li>
+                       <li><a href="https://pll.sokka.cn/docs/help/help.html" target="_blank">使用 PLL</a></li>
+                       <li><a href="https://pll.sokka.cn/docs/insert/intro.html" target="_blank">一同使用SIFStats</a></li>
                    </ul>
                    以及PLL反汉化
                    <ul>

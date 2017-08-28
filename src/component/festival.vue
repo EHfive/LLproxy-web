@@ -353,6 +353,24 @@
                     <br>
                     <mu-flexbox>
                         <mu-flexbox-item class="flex-demo">
+                            箱子获得 G :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.total_reward_coin}}
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item class="flex-demo">
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                        </mu-flexbox-item>
+                    </mu-flexbox>
+                    <br>
+                    <mu-flexbox>
+                        <mu-flexbox-item class="flex-demo">
                             <!--<img src="" alt="金箱">-->
                             金箱 :
                         </mu-flexbox-item>
