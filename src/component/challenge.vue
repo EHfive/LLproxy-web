@@ -238,7 +238,7 @@
                             <mu-th style="text-align: left" v-for="n in 1,5" :key="n">Round. {{n}}</mu-th>
                         </mu-thead>
                         <mu-tbody>
-                            <mu-td style="text-align: left" v-for="v,k in eventview.combo_multiple_r" :key="k">x <span
+                            <mu-td v-if="k!=0" style="text-align: left" v-for="v,k in eventview.combo_multiple_r" :key="k">x <span
                                     style="font-size: small">{{v}}</span></mu-td>
                         </mu-tbody>
                     </mu-table>
@@ -564,7 +564,7 @@
 
                         vm.feslive = response.data.result;
 
-                        if (vm.pair_id === -1) vm.last_pair_id = vm.feslive.pair_id
+                        if (vm.feslive && vm.pair_id === -1) vm.last_pair_id = vm.feslive.pair_id
                     })
                     .catch(function (err) {
                         vm.error = err.toString();

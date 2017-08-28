@@ -2,6 +2,7 @@
     <div>
         <mu-card class="loading" v-if="error">
             <p>获取数据失败,请重试或刷新,或者并无记录</p>
+            {{error}}
         </mu-card>
         <mu-card class="loading" v-else-if="loadingmap || loadingapi || loadingevent">
             <mu-circular-progress :size="120" :strokeWidth="7"/>
@@ -627,7 +628,7 @@
                     .then(function (response) {
 
                         vm.feslive = response.data.result;
-                        if (vm.pair_id === -1) vm.last_pair_id = vm.feslive.pair_id
+                        if (vm.feslive && vm.pair_id === -1) vm.last_pair_id = vm.feslive.pair_id
                     })
                     .catch(function (err) {
                         vm.error = err.toString();
