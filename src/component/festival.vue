@@ -371,6 +371,28 @@
                     <br>
                     <mu-flexbox>
                         <mu-flexbox-item class="flex-demo">
+                            平均 Score :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.avg_score}}
+                        </mu-flexbox-item>
+
+                        <mu-flexbox-item class="flex-demo">
+                            平均 P率 :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.avg_perfect_rate}}
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            场均pt :
+                        </mu-flexbox-item>
+                        <mu-flexbox-item class="flex-demo">
+                            {{eventview.avg_round_event_pt}}
+                        </mu-flexbox-item>
+                    </mu-flexbox>
+                    <br><br>
+                    <mu-flexbox>
+                        <mu-flexbox-item class="flex-demo">
                             <!--<img src="" alt="金箱">-->
                             金箱 :
                         </mu-flexbox-item>

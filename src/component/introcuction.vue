@@ -29,7 +29,7 @@
                    <ul >
                        <li><a href="https://pll.sokka.cn/docs/insert/intro.html" target="_blank">接入 PLL</a></li>
                        <li><a href="https://pll.sokka.cn/docs/help/help.html" target="_blank">使用 PLL</a></li>
-                       <li><a href="https://pll.sokka.cn/docs/insert/intro.html" target="_blank">一同使用SIFStats</a></li>
+                       <li><a href="https://pll.sokka.cn/docs/others/with-sifstats.html" target="_blank">一同使用SIFStats</a></li>
                    </ul>
                    以及PLL反汉化
                    <ul>
@@ -41,7 +41,7 @@
                    LLproxy
                    <br>缩写为PLL  (区别LLP)
                    <br>请通过 <a onfocus="this.blur()" href="//pll.sokka.cn" target="_blank">pll.sokka.cn</a> 或 <a
-                       href="//aqours.tech" target="_blank">aqours.tech</a> 访问
+                       href="http://aqours.tech" target="_blank">aqours.tech</a> 访问
                    <br>联系我:在贴吧 @大众脸的同学 或邮至 cimoc@sokka.cn 即可
                    <br>为加快故障处理及增进交流 请加QQ群吧: <a target="_blank"
                                                href="//shang.qq.com/wpa/qunwpa?idkey=620795ea4927bedcd6cfd48c571797e466c4d8cdfc26bdf69b419dcca64fb449">467474697</a>
