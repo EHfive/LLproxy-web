@@ -38,7 +38,7 @@
                             时间范围
                         </mu-th>
                         <mu-th class="t-a-center f-size-loveca">
-                            Count
+                            合计
                         </mu-th>
                     </mu-thead>
                     <mu-tbody>
@@ -71,10 +71,15 @@
                 logs: null,
                 error: null,
                 groupid: "day",
-                asc: Boolean(util.getkey(asckey)) || false,
+                asc: util.getkey(asckey) === 'true',
                 sltevent: 0,
                 eventlist: [],
                 grouplist: {
+                    "second":{
+                        title:"秒",
+                        fmt: "%Y-%m-%d %H:%s",
+                        unit: ""
+                    },
                     "hour": {
                         title: "小时",
                         fmt: "%Y-%m-%d %H",

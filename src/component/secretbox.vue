@@ -89,8 +89,8 @@
                 count: null,
                 error: null,
                 bypt: false,
-                showr: Boolean(util.getkey(showrkey)) || false,
-                notshown: Boolean(util.getkey(notshownkey)) || false
+                showr: util.getkey(showrkey) === 'true',
+                notshown: util.getkey(notshownkey)=== 'true'
             }
         },
         created () {

@@ -91,7 +91,7 @@
                 count: null,
                 error: null,
                 maps: null,
-                shownormal: Boolean(util.getkey(shownormalkey)) || false,
+                shownormal: util.getkey(shownormalkey) === 'true',
                 sltevent: 0,
                 eventlist: [
                     {
