@@ -4,7 +4,7 @@
             <p>获取数据失败,请重试或刷新,或者并无记录</p>
             {{error}}
         </mu-card>
-        <mu-card class="loading" v-else-if="loadingmap || loadingapi || loadingevent">
+        <mu-card class="loading" v-else-if="loadingmap || loadingapi || loadingevent || loadingview">
             <mu-circular-progress :size="120" :strokeWidth="7"/>
         </mu-card>
 
@@ -40,7 +40,7 @@
                             <mu-th class="wtcover">获得pt</mu-th>
                             <mu-th class="wtmap">Map/Date</mu-th>
                             <mu-th class="wtscore">Score</mu-th>
-                            <mu-th class="wtcombo">Combo</mu-th>
+                            <mu-th class="wtcombo">Combo &判</mu-th>
                             <mu-th class="wtnotes">Perfect/Great Good/Bad/Miss</mu-th>
                             <mu-th class="wtper">P率</mu-th>
                         </mu-thead>
@@ -66,6 +66,7 @@
                                 <mu-td>{{live['score']}}</mu-td>
                                 <mu-td>
                                     {{live['max_combo']}}{{live['max_combo'] == live['total_combo'] ? " FC" : '/' + (live['total_combo'] || ' - ')}}
+                                    <span v-if="live.judge_card>=0"> &{{live.judge_card}}</span>
                                 </mu-td>
                                 <mu-td>{{live['perfect_cnt'] + "/" + live['great_cnt']}}
                                     <span style="margin-left: 10px">{{live['good_cnt'] + "/" + live['bad_cnt'] + "/" + live['miss_cnt']}}</span>
@@ -98,7 +99,7 @@
                             <mu-th class="wtcover">获得pt</mu-th>
                             <mu-th class="wtcover">Live后持有pt</mu-th>
                             <mu-th class="wtscore">Score</mu-th>
-                            <mu-th class="wtcombo">Combo</mu-th>
+                            <mu-th class="wtcombo">Combo &判</mu-th>
                             <mu-th class="wtnotes">P/Great Good/B/M</mu-th>
                             <mu-th class="wtper">P率</mu-th>
                         </mu-thead>
@@ -117,6 +118,7 @@
                                 <mu-td>{{feslive['score']}}</mu-td>
                                 <mu-td>
                                     {{feslive['max_combo']}}{{feslive['max_combo'] == feslive['total_combo'] ? " FC" : '/' + (feslive['total_combo'] || ' - ')}}
+                                    <span v-if="feslive.judge_card>=0"> &{{feslive.judge_card}}</span>
                                 </mu-td>
                                 <mu-td>{{feslive['perfect_cnt'] + "/" + feslive['great_cnt']}}
                                     <span style="margin-left: 10px">{{feslive['good_cnt'] + "/" + feslive['bad_cnt'] + "/" + feslive['miss_cnt']}}</span>
@@ -242,7 +244,7 @@
                 <mu-table style="width: 100%">
                     <mu-tr>
                         <mu-td v-for="val,k in weight.song_set_ids" :key="k" style="text-align: center">
-                            <live-cover :sisSize="45" :attr="getmapattrid(val)" :src="getlive_iconsrc(val)"
+                            <live-cover :key="val" :sisSize="45" :attr="getmapattrid(val)" :src="getlive_iconsrc(val)"
                                         class="img-responsive"></live-cover>
                         </mu-td>
                     </mu-tr>
@@ -478,6 +480,7 @@
                 loadingmap: true,
                 loadingapi: true,
                 loadingevent: true,
+                loadingview:true,
                 lives: null,
                 page: 1,
                 limit: 10,
@@ -615,6 +618,7 @@
             fetchData (reload = true) {
 
                 reload && (this.loadingapi = true);
+                reload && (this.loadingview = true);
                 const vm = this;
                 axios.get(util.api_server + 'llproxy/eventFestival/', {
                     params: {
@@ -630,7 +634,7 @@
                         vm.page = response.data['result']['curr_page'];
                         vm.limit = response.data['result']['limit'];
                         vm.count = response.data['result']['count'];
-                        reload && (vm.loadingapi = false);
+                        vm.loadingapi = false;
                     })
                     .catch(function (err) {
                         vm.error = err.toString();
@@ -647,7 +651,7 @@
                     .then(function (response) {
 
                         vm.eventview = response.data.result;
-                        reload && (vm.loadingapi = false);
+                        vm.loadingview = false;
                     })
                     .catch(function (err) {
                         vm.error = err.toString();

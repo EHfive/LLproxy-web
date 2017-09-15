@@ -31,6 +31,7 @@ import DeckInfo from './component/deckInfo.vue'
 import EffortBox from './component/effortbox.vue'
 import Challenge from  './component/challenge.vue'
 import Festival from './component/festival.vue'
+import Battle from './component/battle.vue'
 import Loveca from './component/loveca.vue'
 // const TSwitch = resolve => require(['./component/themeswitch.vue'], resolve)
 const router = new VueRouter({
@@ -96,6 +97,10 @@ const router = new VueRouter({
                 {
                     path: ':id/marathon',
                     component: Marathon
+                },
+                {
+                    path: ':id/battle',
+                    component: Battle
                 },
                 {
                     path: ':id/festival',

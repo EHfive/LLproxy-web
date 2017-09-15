@@ -21,8 +21,8 @@
                         <mu-th class="wtcover">Cover</mu-th>
                         <mu-th class="wtmap">Map/Date</mu-th>
                         <mu-th class="wtscore">Score</mu-th>
-                        <mu-th class="wtcombo">Combo</mu-th>
-                        <mu-th class="wtnotes">Perfect/Great Good/Bad/Miss</mu-th>
+                        <mu-th class="wtcombo">Combo  &判</mu-th>
+                        <mu-th class="wtnotes">P/Grt Gd/B/M</mu-th>
                         <mu-th class="wtper">P率</mu-th>
                     </mu-thead>
                     <mu-tbody>
@@ -46,6 +46,7 @@
                                 {{live['max_combo']}}
                                 <span v-if="live['live_setting_id']">{{live['max_combo'] == maps[live['live_setting_id']].s_rank_combo ? " FC " : '/'+(maps[live['live_setting_id']].s_rank_combo || ' - ')}}
                             </span>
+                                <span v-if="live.judge_card>=0"> &{{live.judge_card}}</span>
                             </mu-td>
                             <mu-td>{{live['perfect_cnt'] + "/" + live['great_cnt']}}
                                 <span style="margin-left: 10px">{{live['good_cnt'] + "/" + live['bad_cnt'] + "/" + live['miss_cnt']}}</span>

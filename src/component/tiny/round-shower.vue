@@ -16,7 +16,7 @@
                         <mu-th class="wtcover ht50">获得pt</mu-th>
                         <mu-th class="wtscore ht50">LIVE Rank</mu-th>
                         <mu-th class="wtscore ht50">Score</mu-th>
-                        <mu-th class="wtcombo ht50">Combo</mu-th>
+                        <mu-th class="wtcombo ht50">Combo &判</mu-th>
                         <mu-th class="wtnotes ht50">P/Great Good/B/M</mu-th>
                         <mu-th class="wtcombo ht50">Love pt</mu-th>
                         <mu-th class="wtper ht50">P率</mu-th>
@@ -34,7 +34,11 @@
                             <mu-td>
                                 {{lives[round - 1]['max_combo']}}
                                 <span v-if="lives[round-1]['live_setting_id']">{{lives[round - 1]['max_combo'] == maps[lives[round - 1]['live_setting_id']].s_rank_combo ? " FC " : '/' + (maps[lives[round - 1]['live_setting_id']].s_rank_combo || ' - ')}}
-                            </span></mu-td>
+
+                            </span>
+                                <span v-if="lives[round-1].judge_card>=0"> &{{lives[round-1].judge_card}}</span>
+
+                            </mu-td>
                             <mu-td>{{lives[round - 1]['perfect_cnt'] + "/" + lives[round - 1]['great_cnt']}}
                                 <span style="margin-left: 10px">{{lives[round - 1]['good_cnt'] + "/" + lives[round - 1]['bad_cnt'] + "/" + lives[round - 1]['miss_cnt']}}</span>
                             </mu-td>

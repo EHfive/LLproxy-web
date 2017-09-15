@@ -12,11 +12,11 @@
 
 
         </mu-appbar>
-        <mu-drawer style="overflow-x: hidden" class="ban-select"  :open="open" @close="toggle()" :docked="false">
+        <mu-drawer style="overflow-x: hidden" class="ban-select" :open="open" @close="toggle()" :docked="false">
             <mu-appbar title="选项" fullwidth></mu-appbar>
 
-            <mu-menu :value="menuval" >
-                <mu-menu-item style="margin-bottom: 25px"  title="关于" @click="goto('/user/')"></mu-menu-item>
+            <mu-menu :value="menuval">
+                <mu-menu-item style="margin-bottom: 25px" title="关于" @click="goto('/user/')"></mu-menu-item>
                 <!--<mu-menu-item title="User:同学失格/865384" @click="goto('/user/865384')"></mu-menu-item>-->
                 <!--<mu-menu-item title="User:Cimoc/5012675" @click="goto('/user/5012675')"></mu-menu-item>-->
 
@@ -56,6 +56,7 @@
                 user_list: {},
                 avatar_unit: null,
                 theme: null,
+                search_times: 0,
                 themes: {
                     'CARBON': carbon,
                     "μ's": muse,
@@ -139,11 +140,13 @@
                 }
             },
             search(){
-
+                const keyword = this.dataSource.length === 1 ? this.dataSource[0] : this.val;
                 this.$router.replace({
                     name: 'search',
                     query: {
-                        keyword: this.dataSource.length === 1 ? this.dataSource[0] : this.val
+                        t: ++this.search_times,
+                        keyword: keyword
+
                     }
                 })
 
@@ -180,7 +183,7 @@
             },
             switchtheme(hold = false){
                 let tid = parseInt(localStorage.getItem('pll-theme'));
-                const tlist = ['CARBON', 'LIGHT', 'TEAL',"μ's", 'Aqours'];
+                const tlist = ['CARBON', 'LIGHT', 'TEAL', "μ's", 'Aqours'];
                 if (tid < tlist.length && tid >= 0) {
 
                 } else {
@@ -271,14 +274,16 @@
     .appbar-avatar {
 
     }
-    .ban-select{
-        -moz-user-select:none;/*火狐*/
 
-        -webkit-user-select:none;/*webkit浏览器*/
+    .ban-select {
+        -moz-user-select: none; /*火狐*/
 
-        -ms-user-select:none;/*IE10*/
-        user-select:none;
+        -webkit-user-select: none; /*webkit浏览器*/
+
+        -ms-user-select: none; /*IE10*/
+        user-select: none;
     }
+
     .iconcl {
         margin: 0;
         padding: 0;

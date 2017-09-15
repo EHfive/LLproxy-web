@@ -75,9 +75,9 @@
                 sltevent: 0,
                 eventlist: [],
                 grouplist: {
-                    "second":{
-                        title:"秒",
-                        fmt: "%Y-%m-%d %H:%s",
+                    "minute":{
+                        title:"分钟",
+                        fmt: "%Y-%m-%d %H:%i",
                         unit: ""
                     },
                     "hour": {

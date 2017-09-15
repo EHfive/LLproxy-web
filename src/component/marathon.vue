@@ -51,6 +51,7 @@
                             <mu-td>{{live['score']}}</mu-td>
                             <mu-td>
                                 {{live['max_combo']}}/{{live['max_combo'] == maps[live['live_setting_id']].s_rank_combo ? "[ FC ]" : (maps[live['live_setting_id']].s_rank_combo || ' - ')}}
+                                <span v-if="live.judge_card>=0"> &{{live.judge_card}}</span>
                             </mu-td>
                             <mu-td>{{live['perfect_cnt'] + "/" + live['great_cnt']}}
                                 <span style="margin-left: 10px">{{live['good_cnt'] + "/" + live['bad_cnt'] + "/" + live['miss_cnt']}}</span>
