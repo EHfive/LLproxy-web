@@ -29,10 +29,11 @@ import PNF from './component/pagenotfound.vue'
 import Deck from './component/deck.vue'
 import DeckInfo from './component/deckInfo.vue'
 import EffortBox from './component/effortbox.vue'
-import Challenge from  './component/challenge.vue'
+import Challenge from './component/challenge.vue'
 import Festival from './component/festival.vue'
 import Battle from './component/battle.vue'
 import Loveca from './component/loveca.vue'
+import Quest from './component/quest.vue'
 // const TSwitch = resolve => require(['./component/themeswitch.vue'], resolve)
 const router = new VueRouter({
     // mode: 'history',
@@ -108,11 +109,15 @@ const router = new VueRouter({
                 },
                 {
                     path: ':id/challenge',
-                    component:Challenge
+                    component: Challenge
                 },
                 {
                     path: ':id/loveca',
-                    component:Loveca
+                    component: Loveca
+                },
+                {
+                    path: ':id/quest',
+                    component: Quest
                 }
 
             ]

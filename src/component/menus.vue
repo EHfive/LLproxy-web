@@ -14,10 +14,11 @@
                 <mu-menu-item title="开箱记录" leftIcon="card_giftcard"
                               @click="goto('/user/'+getID()+'/effortbox')"></mu-menu-item>
                 <mu-menu-item title="活动记录" rightIcon="keyboard_arrow_right" inset>
-                    <mu-menu-item title="传统活动/Marathon" @click="goto('/user/'+getID()+'/marathon')"></mu-menu-item>
+                    <mu-menu-item title="传统活动 /Marathon" @click="goto('/user/'+getID()+'/marathon')"></mu-menu-item>
                     <mu-menu-item title="Score Match" @click="goto('/user/'+getID()+'/battle')"></mu-menu-item>
                     <mu-menu-item title="Medley Fes" @click="goto('/user/'+getID()+'/festival')"></mu-menu-item>
                     <mu-menu-item title="Challenge Fes" @click="goto('/user/'+getID()+'/challenge')"></mu-menu-item>
+                    <mu-menu-item title="散步拉力 /Quest" @click="goto('/user/'+getID()+'/quest')"></mu-menu-item>
                     <mu-menu-item title="Loveca LP回复" @click="goto('/user/'+getID()+'/loveca')"></mu-menu-item>
                 </mu-menu-item>
             </mu-menu>
@@ -89,6 +90,9 @@
                             break;
                         case 4:
                             path+='challenge';
+                            break;
+                        case 5:
+                            path+='quest';
                             break;
                     }
                     this.goto(path)
