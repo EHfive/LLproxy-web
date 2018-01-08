@@ -15,7 +15,7 @@
                               @click="goto('/user/'+getID()+'/effortbox')"></mu-menu-item>
                 <mu-menu-item title="活动记录" rightIcon="keyboard_arrow_right" inset>
                     <mu-menu-item title="传统活动/Marathon" @click="goto('/user/'+getID()+'/marathon')"></mu-menu-item>
-                    <mu-menu-item title="Score Match [未完]" @click="goto('/user/'+getID()+'/battle')"></mu-menu-item>
+                    <mu-menu-item title="Score Match" @click="goto('/user/'+getID()+'/battle')"></mu-menu-item>
                     <mu-menu-item title="Medley Fes" @click="goto('/user/'+getID()+'/festival')"></mu-menu-item>
                     <mu-menu-item title="Challenge Fes" @click="goto('/user/'+getID()+'/challenge')"></mu-menu-item>
                     <mu-menu-item title="Loveca LP回复" @click="goto('/user/'+getID()+'/loveca')"></mu-menu-item>

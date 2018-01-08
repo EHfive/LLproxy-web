@@ -40,15 +40,15 @@
                             <mu-th style="width: 50px">获得pt</mu-th>
                             <mu-th style="width: 50px">SMpt</mu-th>
                             <mu-th style="width: 130px">Map/Date</mu-th>
-                            <mu-th style="width: 70px">Score #SMrank</mu-th>
+                            <mu-th style="width: 75px">Score #rank</mu-th>
                             <mu-th style="width: 70px">Combo &判</mu-th>
-                            <mu-th style="width: 130px">P/Grt Gd/B/M</mu-th>
-                            <mu-th style="width: 80px">P率</mu-th>
+                            <mu-th style="width: 120px">P/Grt Gd/B/M</mu-th>
+                            <mu-th style="width: 60px">P率</mu-th>
                         </mu-thead>
                         <mu-tbody>
                             <mu-tr v-for="live,index in lives" :key="index"
                                    :class="(live['max_combo']==maps[live['live_setting_id']].s_rank_combo?'live-fc':'')">
-                                <mu-td style="font-size: 100%" class="cursor-pointer" @click="goto_room(live)">
+                                <mu-td style="font-size: 100%" class="cursor-pointer" @click="goto_room(live,index)">
                                     {{live['event_battle_room_id']}}
                                 </mu-td>
                                 <mu-td>
@@ -60,7 +60,7 @@
                                         ({{add_add(live['match']['rating_status']['evaluation'])}})</span><span
                                         v-else>-</span>
                                 </mu-td>
-                                <mu-td class="cursor-pointer" @click="goto_room(live)">
+                                <mu-td class="cursor-pointer" @click="goto_room(live,index)">
                                     <span>
                                         {{ getmapname(live['live_setting_id'], false) || ("difficulty-id: " + live['live_difficulty_id'])}}
                                         <br>
@@ -102,22 +102,26 @@
             </div>
         </mu-card>
         <div hidden>
-            <mu-dialog v-if="clive" :open="dialog"
+            <mu-dialog v-if="clive" :open="dialog" scrollable
                        :title="'#'+clive.event_battle_room_id+' - '+getmapname(clive['live_setting_id'], true)"
-                       @close="close"
+                       @close="close" actionsContainerClass="room-dialog-action"
                        bodyClass="room-dialog-body" dialogClass="room-dialog" titleClass="room-dialog-title">
-                <mu-paper v-for="user,k in clive.matching_user" class="user-paper" :key="k">
+                <mu-paper v-for="user,k in clive.matching_user" class="user-paper" :key="k" v-if="user">
 
-                    <mu-badge v-if="user.user_info.user_id == clive.uid" content="你" class="demo-icon-badge" circle
+                    <mu-badge v-if="user.user_info && user.user_info.user_id == clive.uid" content="你"
+                              class="demo-icon-badge" circle
                               secondary>
                         <mu-avatar :size="75" :src="getavatarsrc(user.center_unit_info)"
-                                   style="margin: 5px 5px 5px 10px;"></mu-avatar>
+                                   class="room-avatar"></mu-avatar>
                     </mu-badge>
                     <mu-avatar v-else :size="75" :src="getavatarsrc(user.center_unit_info)"
                                style="margin: 5px 5px 5px 10px;"></mu-avatar>
 
                     <div v-if="user.user_info" class="room-name">
                         {{user.user_info.name}}
+                    </div>
+                    <div v-else-if="user.npc_info" class="room-name">
+                        {{user.npc_info.name}} [NPC]
                     </div>
 
                     <div v-if="clive.status == 3" class="room-name" style="width: 110px">
@@ -133,25 +137,38 @@
                     </div>
 
                     <div class="room-name" style="width: 120px">
-                        <span class="room-key">SMpt :</span>
-                        {{user.event_battle_rating_status.rating}}<br>
-                        <span v-if="clive.status == 3">({{add_add(user.event_battle_rating_status.evaluation)}})</span>
-                        <br>
-                        <span class="room-key">SMpt Rank :</span>
-                        {{user.event_battle_rating_status.rating_rank}}
+                        <template v-if="user.event_battle_rating_status">
+                            <span class="room-key">SMpt :</span>
+                            {{user.event_battle_rating_status.rating}}<br>
+                            <span v-if="clive.status == 3">({{add_add(user.event_battle_rating_status.evaluation)}}) <br></span>
+
+                            <span class="room-key">SMpt Rank :</span>
+                            {{user.event_battle_rating_status.rating_rank}}
+                        </template>
+
                     </div>
                     <div class="room-name" style="width: 100px">
-                        <span class="room-key">pt :</span>
-                        {{user.event_status.total_event_point}}
-                        <br>
-                        <span class="room-key">pt Rank :</span>
-                        {{user.event_status.event_rank}}
+                        <template v-if="user.event_status">
+                            <span class="room-key">pt :</span>
+                            {{user.event_status.total_event_point}}
+                            <br>
+                            <span class="room-key">pt Rank :</span>
+                            {{user.event_status.event_rank}}
+                        </template>
                     </div>
                     <div v-if="clive.status == 3" class="room-rank">
                         {{user.result.battle_rank}}
                     </div>
                 </mu-paper>
-                <mu-flat-button slot="actions" primary @click="close" label="确定"/>
+                <template slot="actions">
+                    <div style="margin-left: 10px">
+                        <mu-flat-button secondary @click="roomNew" label="Newer" style="margin-right: 10px"/>
+                        <mu-flat-button secondary @click="roomForward" label="Forward"/>
+                    </div>
+                    <span class="room-key" style="color: #7e848c">{{timefmt(clive.update_time)}}</span>
+                    <mu-flat-button primary @click="close" label="确定" style="margin-left: 10px;margin-right: 10px"/>
+                </template>
+
             </mu-dialog>
         </div>
     </div>
@@ -171,7 +188,9 @@
                 loadingevent: true,
                 lives: null,
                 clive: null,
+                cpnt: 0,
                 page: 1,
+                all_page: null,
                 limit: 8,
                 count: null,
                 dialog: false,
@@ -212,7 +231,6 @@
             })
 
         },
-
         watch: {
             // 如果路由有变化，会再次执行该方法
             '$route': 'fetchData',
@@ -237,6 +255,54 @@
             add_add(num){
                 if (num < 0) return num.toString();
                 else return '+' + num.toString()
+            },
+            roomNew(){
+                if (this.cpnt <= 0) {
+                    if (this.page <= 1) {
+                        this.page = 1;
+                        const vm = this;
+                        this.fetchData(true, function () {
+                            vm.cpnt = 0;
+                            vm.clive = vm.lives[vm.cpnt];
+                            vm.open()
+                        })
+                    } else {
+                        this.page -= 1;
+                        const vm = this;
+                        this.fetchData(true, function () {
+                            vm.cpnt = vm.lives.length - 1;
+                            vm.clive = vm.lives[vm.cpnt];
+                            vm.open()
+                        })
+                    }
+                } else {
+                    this.cpnt -= 1;
+                    this.clive = this.lives[this.cpnt]
+                }
+            },
+            roomForward(){
+                if (this.cpnt >= this.lives.length - 1) {
+                    if (this.page >= this.all_page) {
+                        this.page = this.all_page;
+                        const vm = this;
+                        this.fetchData(true, function () {
+                            vm.cpnt = vm.lives.length - 1;
+                            vm.clive = vm.lives[vm.cpnt];
+                            vm.open()
+                        })
+                    } else {
+                        this.page += 1;
+                        const vm = this;
+                        this.fetchData(true, function () {
+                            vm.cpnt = 0;
+                            vm.clive = vm.lives[vm.cpnt];
+                            vm.open()
+                        })
+                    }
+                } else {
+                    this.cpnt += 1;
+                    this.clive = this.lives[this.cpnt]
+                }
             },
 //            handleNew(){
 //                if (this.pair_id === -1 || this.pair_id === this.last_pair_id) this.fetchLive();
@@ -275,8 +341,9 @@
 //                this.pair_id = -1;
 //                this.fetchLive();
 //            },
-            goto_room(live){
+            goto_room(live, pnt){
                 this.clive = live;
+                this.cpnt = pnt;
                 this.open()
             },
             handlepage (newIndex) {
@@ -300,7 +367,7 @@
                     })
             },
 
-            fetchData (reload = true) {
+            fetchData (reload = true, setclive = null) {
 
                 reload && (this.loadingapi = true);
                 const vm = this;
@@ -318,7 +385,9 @@
                         vm.page = response.data['result']['curr_page'];
                         vm.limit = response.data['result']['limit'];
                         vm.count = response.data['result']['count'];
+                        vm.all_page = response.data['result']['all_page'];
                         vm.loadingapi = false;
+                        setclive && setclive()
                     })
                     .catch(function (err) {
                         vm.error = err.toString();
@@ -350,7 +419,7 @@
                 uid = parseInt(uid);
                 for (let i = 0; i < lives.length; i++) {
                     const matching_user = lives[i]['matching_user'];
-                    let mu = [null, null, null, null];
+//                    let mu = [null, null, null, null];
                     lives[i]['match'] = {
                         'battle_rank': '-',
                         'rating_status': {
@@ -364,7 +433,7 @@
                     for (let j = 0; j < matching_user.length; j++) {
                         const u = matching_user[j];
 //                        console.log(u);
-                        mu[u.result.battle_rank - 1] = u;
+//                        mu[u.result.battle_rank - 1] = u;
                         if (u.user_info && u.user_info.user_id === uid) {
                             lives[i]['match'] = {
                                 'battle_rank': u.result.battle_rank,
@@ -377,7 +446,10 @@
                         }
 
                     }
-                    lives[i]['matching_user'] = mu
+//                    lives[i]['matching_user'] = mu
+                    lives[i]['matching_user'].sort(function (a, b) {
+                        return a.result.battle_rank - b.result.battle_rank
+                    })
 
                 }
                 return lives
@@ -428,7 +500,10 @@
                     if (x) return true
                 }
                 return false
-            }
+            },
+            timefmt(isotime){
+                return isotime.replace(new Date().getFullYear() + '-', "").replace('201', "1").replace("T", " ")
+            },
 
         },
         components: {
@@ -454,6 +529,11 @@
         margin: 10px 0 5px;
     }
 
+    .room-avatar {
+        margin: 5px 5px 5px 10px;
+        /*width: 100%;*/
+    }
+
     .room-key {
         font-size: x-small
     }
@@ -462,7 +542,7 @@
         color: #59606b;
         width: 90px;
         max-height: 70px;
-        margin: 5px 5px 5px 5px;
+        margin: 5px 10px 5px 5px;
         overflow-wrap: break-word;
         overflow: hidden;
     }
@@ -477,8 +557,7 @@
     .room-dialog {
         width: 95%;
         max-width: 768px;
-        /*height: 95%;*/
-        /*max-height: 800px;*/
+        max-height: 555px !important;
         padding: 0;
         background-color: #fff;
         border-radius: 2px;
@@ -487,12 +566,26 @@
     }
 
     .room-dialog-body {
-        /*max-height: 500px;*/
+        max-height: 440px !important;
         /*overflow: scroll;*/
+        padding-bottom: 0px;
     }
 
     .room-dialog-title {
         color: rgba(71, 74, 79, 0.6) !important;
+        padding-bottom: 5px;
+        .scrollable {
+            border-bottom: none !important;
+        }
+    }
+
+    .room-dialog-action {
+        padding-bottom: 10px;
+        justify-content: space-between;
+    }
+
+    .scrollable {
+        border: none !important;
     }
 
     .demo-badge-content {

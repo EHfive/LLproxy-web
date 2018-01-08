@@ -43,14 +43,18 @@
     @media screen and (max-width: 600px) {
 
         .content {
-            /*padding: 5px 3%*/
+            padding-top: 1px;
+            padding-bottom: 5px;
+            width: 98%;
         }
     }
 
     /*tablet*/
     @media screen and (min-width: 600px) and (max-width: 1100px) {
         .content {
-            /*padding: 12px 4%*/
+            padding-top: 3px;
+            padding-bottom: 12px;
+            width: 96%;
         }
     }
 
@@ -59,12 +63,14 @@
 
         .content {
             /*padding: 20px 80px*/
+            max-width: 1200px
         }
     }
 
     @media screen and (min-width: 1275px) {
 
         .content {
+            max-width: 1200px
             /*padding: 20px 12%*/
         }
     }

@@ -229,7 +229,7 @@
 
             },
             getexporturl(){
-                return "http://llhelper.duapp.com/llnewunitsis?unit=" + this.export_deck.llhelperString
+                return "http://llhelper.com/llnewunitsis?unit=" + this.export_deck.llhelperString
             },
             fetchCode(codestring){
                 const vm = this;

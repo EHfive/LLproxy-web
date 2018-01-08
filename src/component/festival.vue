@@ -189,7 +189,7 @@
                     </mu-table>
                     <mu-table>
                         <mu-tr>
-                            <mu-td v-for="val,k in feslive.reward_items" :key="k" style="text-align: center">
+                            <mu-td v-for="val,k in feslive.reward_items" :key="k" v-if="val" style="text-align: center">
                                 <mu-badge class="demo-badge-content" circle
                                           :color="{1:'#dba44f',2:'grey400',3:'yellowA700'}[val.rarity]"
                                           :content="''+{1:'铜',2:'银',3:'金'}[val.rarity]">
